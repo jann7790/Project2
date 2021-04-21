@@ -3,5 +3,6 @@
 
 int main()
 {
-	;
+	bignum num;
+	num.input();
 }
