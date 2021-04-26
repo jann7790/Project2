@@ -1,3 +1,4 @@
+#pragma once
 #include "bignum.h"
 void bignum::input()
 {
@@ -7,11 +8,12 @@ bignum& bignum::operator+(bignum& rhs)
 {
     if (numbers.length() > rhs.numbers.length())
     {
-        numbers.insert(0, numbers.length() - rhs.numbers.length(), '0');
+        rhs.numbers.insert(0, numbers.length() - rhs.numbers.length(), '0');
     }
     else
     {
-        rhs.numbers.insert(0, rhs.numbers.length() - numbers.length(), '0');
+        numbers.insert(0, rhs.numbers.length() - numbers.length(), '0');
+
     }
     string result = "";
     int temp;
@@ -25,6 +27,7 @@ bignum& bignum::operator+(bignum& rhs)
     }
     if (carry)
         result.insert(0, 1, carry + '0');
+    numbers = result;
     return *this;
 }
 
@@ -42,4 +45,20 @@ bignum& bignum::operator/(bignum& rhs)
 {
     return *this;
 
+}
+bignum& bignum::operator=(bignum& rhs)
+{
+    numbers = rhs.numbers;
+    return *this;
+}
+
+ostream& operator<<(ostream& str, bignum& rhs)
+{
+    str << rhs.numbers;
+    return str;
+}
+istream& operator>>(istream& str, bignum& rhs)
+{
+    str >> rhs.numbers;
+    return str;
 }
