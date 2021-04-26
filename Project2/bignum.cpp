@@ -1,12 +1,90 @@
 #pragma once
 #include <string>
 #include "bignum.h"
+bool bignum::isNegtive()const
+{
+    if (numbers.find("-") != string::npos)
+        return 1;
+    return 0;
+
+}
+const bool operator==(const bignum& lhs, const bignum& rhs)
+{
+    if (lhs.numbers.length() == rhs.numbers.length())
+    {
+        for (size_t i = 0; i < lhs.numbers.length(); i++)
+        {
+            if (lhs.numbers[i] != rhs.numbers[i])
+                return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
 void bignum::input()
 {
     cin >> numbers;
 }
-bignum bignum::operator+(const bignum& rhs)
+const bool operator>=(const bignum& lhs, const bignum& rhs)
 {
+    if (lhs < rhs)
+        return 0;
+    return 1;
+}
+
+const bool operator>(const bignum& lhs, const bignum& rhs)
+{
+    if (!lhs.isNegtive() && !rhs.isNegtive())
+    {
+        if (lhs.numbers.length() > rhs.numbers.length())
+            return 1;
+        if (lhs.numbers.length() < rhs.numbers.length())
+            return 0;
+        for (size_t i = 0; i < lhs.numbers.length(); i++)
+        {
+            if (lhs.numbers[i] > rhs.numbers[i])
+                return 1;
+            if (lhs.numbers[i] < rhs.numbers[i])
+                return 0;
+        }
+    }
+    else if (!lhs.isNegtive() && rhs.isNegtive())
+    {
+        return 1;
+    }
+    else if (lhs.isNegtive() && !rhs.isNegtive())
+    {
+        return 0;
+    }
+    else
+    {
+        if (lhs.numbers.length() > rhs.numbers.length())
+            return 0;
+        if (lhs.numbers.length() < rhs.numbers.length())
+            return 1;
+        for (size_t i = 1; i < lhs.numbers.length(); i++)
+        {
+            if (lhs.numbers[i] > rhs.numbers[i])
+                return 0;
+            if (lhs.numbers[i] < rhs.numbers[i])
+                return 1;
+        }
+    }
+    return 0;
+
+    
+}
+const bool operator<(const bignum& lhs, const bignum& rhs)
+{
+    if (lhs > rhs || (lhs == rhs))
+        return 0;
+    return 1;
+}
+const bignum bignum::operator+(const bignum& rhs)
+{
+    if (isNegtive() && !rhs.isNegtive())
+        return bignum(rhs) - bignum(numbers.substr(1, numbers.length()));
     string left_string = numbers;
     string right_string = rhs.numbers;
     string result = "";
@@ -34,7 +112,7 @@ bignum bignum::operator+(const bignum& rhs)
 
     return bignum(result);
 }
-bignum bignum::operator-(const bignum& rhs)
+const bignum bignum::operator-(const bignum& rhs)
 {
     string left_string = numbers;
     string right_string = rhs.numbers;
@@ -68,18 +146,20 @@ bignum bignum::operator-(const bignum& rhs)
         if (left < 0)
         {
             arr[i] *= -1;
-            if (arr[i] < 0)
+            int j = i;
+            while (arr[j] < 0)
             {
-                arr[i] += 10;
-                arr[i - 1]--;
+                arr[j] += 10;
+                arr[--j]--;
             }
         }
         else
         {
-            if (arr[i] < 0)
+            int j = i;
+            while (arr[j] < 0)
             {
-                arr[i] += 10;
-                arr[i - 1]--;
+                arr[j] += 10;
+                arr[--j]--;
             }
         }
 
@@ -91,7 +171,7 @@ bignum bignum::operator-(const bignum& rhs)
     return bignum(result);
 
 }
-bignum bignum::operator*(const bignum& rhs)
+const bignum bignum::operator*(const bignum& rhs)
 {
     string str = "";
     str.insert(0, rhs.numbers.length() + numbers.length(), '0');
@@ -121,9 +201,47 @@ bignum bignum::operator*(const bignum& rhs)
     }
     return result;
 }
-bignum bignum::operator/(const bignum& rhs)
+const bignum bignum::operator/(const bignum& rhs)
 {
-    return *this;
+    string left_string = numbers;
+    string right_string = rhs.numbers;
+    string quotient = "";
+    bignum fraction;
+    int count = 0;
+    int length = 0;
+    if (left_string.length() > right_string.length())
+        length = left_string.length();
+    else
+    {
+        length = right_string.length();
+    }
+    for (int i = 1; i <= length; i++)
+    {
+        fraction = bignum(left_string.substr(0, i));
+        //cout << "frac :"<<fraction << endl;
+        if (fraction >= bignum(right_string))
+        {
+            while (fraction >= bignum(right_string))
+            {
+                fraction = fraction - bignum(right_string);
+                count++;
+            //    cout << "faaaaaaarac :" << fraction << endl;
+            }
+            if (fraction.isNegtive())
+            {
+                count--;
+                fraction = fraction + bignum(right_string);
+            }
+            //cout << "frac :" << fraction << endl;
+            //cout << "count:" <<count << endl;
+            left_string = fraction.numbers + left_string.substr(i, left_string.length());
+            //cout << "remaing" << left_string << endl;
+            quotient += to_string(count);
+        }
+        count = 0;
+    }
+
+    return bignum(quotient);
 
 }
 bignum bignum::operator=(const bignum& rhs)
