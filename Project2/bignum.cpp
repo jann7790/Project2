@@ -396,50 +396,6 @@ bignum bignum::operator=(const bignum& rhs) {
 	floating_position = rhs.floating_position;
 	return *this;
 }
-bignum::bignum() :numbers(""), floating_position(0) {}
-bignum::bignum(string input)
-{
-    if (input == "")
-    {
-        numbers = "0";
-        floating_position = input.length();
-    }
-   
-
-    if (input.find(".") != string::npos)
-    {
-        int floating_point = input.find(".");
-        input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
-        
-            int i = input.length() - 1;
-        for (; i > floating_point + 1; i--)
-        {
-            if (input[i] != '0')
-                break;
-        }
-        input = input.substr(0, i + 1);
-        i = 0;
-        for (; i < floating_point - 1; i++)
-        {
-            if (input[i] != '0')
-                break;
-        }
-        input = input.substr(i, input.length());
-        numbers = input;
-        floating_position = floating_point - i;
-    }
-    else
-    {
-        int i = 0;
-        for (; i < input.length(); i++)
-        {
-            if (input[i] != '0')
-                break;
-        }
-        numbers = input.substr(i, input.length());
-        floating_position = numbers.length();
-    }
-    
 
 ostream& operator<<(ostream& str, bignum rhs) {
 	if (rhs.isFloating()) {
