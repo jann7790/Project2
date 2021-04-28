@@ -179,6 +179,18 @@ const bignum bignum::operator+(const bignum& rhs) {
 		}
 		bignum floating_part = bignum(left_floating_num) + bignum(right_floating_num);
 
+		int check;
+		if (left_floating_num.length() > right_floating_num.length())
+			check = left_floating_num.length();
+		else
+			check = right_floating_num.length();
+
+		if (floating_part.numbers.length() > check)
+		{
+			int_part = int_part + bignum(to_string(floating_part.numbers[0]));
+			floating_part.numbers = floating_part.numbers.substr(1, floating_part.numbers.length());
+		}
+
 		string result = int_part.numbers + floating_part.numbers;
 
 		return bignum(result, result_position);
