@@ -8,7 +8,6 @@ public:
 	bignum(string input);
 	bignum(string nums, int floating_point);
 	bignum(const bignum& rhs);
-	bignum(int num);
 	bignum();
 	void input();
 	bool isNegtive()const;
