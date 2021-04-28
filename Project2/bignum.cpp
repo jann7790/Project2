@@ -441,8 +441,9 @@ bignum::bignum(string input)
 
     if (input.find(".") != string::npos)
     {
-        input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
         int floating_point = input.find(".");
+        input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
+        
             int i = input.length() - 1;
         for (; i > floating_point + 1; i--)
         {
