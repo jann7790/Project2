@@ -345,8 +345,8 @@ const bignum bignum::operator/(const bignum& rhs) {
 		else {
 			offset = (right_string.length() - rhs.floating_position - left_string.length() + floating_position);
 		}
-		bignum left = (bignum(pow(10, offset)) * bignum(left_string));
-		bignum right = (bignum(pow(10, offset)) * bignum(right_string));
+		bignum left = (bignum(to_string(pow(10, offset))) * bignum(left_string));
+		bignum right = (bignum(to_string(pow(10, offset))) * bignum(right_string));
 		//return  left / right;
 	}
 	string quotient = "";
