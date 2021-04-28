@@ -26,10 +26,8 @@ bignum::bignum(const bignum& rhs) {
 		numbers = rhs.numbers.substr(i, rhs.numbers.length());
 	}
 }
-
-bignum::bignum() :numbers(""), floating_position(0) {
+bignum::bignum() :numbers("0"), floating_position(0) {
 }
-
 bignum::bignum(string input) {
 	if (input == "") {
 		numbers = "0";
@@ -41,7 +39,7 @@ bignum::bignum(string input) {
 		int floating_point = input.find(".");
 		input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
 		int i = input.length() - 1;
-		for (; i > floating_point + 1; i--) {
+		for (; i >= floating_point ; i--) {
 			if (input[i] != '0')
 				break;
 		}
@@ -57,7 +55,7 @@ bignum::bignum(string input) {
 	}
 	else {
 		int i = 0;
-		for (; i < input.length(); i++) {
+		for (; i < input.length() - 1; i++) {
 			if (input[i] != '0')
 				break;
 		}
@@ -66,14 +64,13 @@ bignum::bignum(string input) {
 	}
 
 }
-
 bignum::bignum(string input, int floating_point) {
 	if (input == "") {
 		numbers = "0";
 		floating_position = input.length();
 	}
 	int i = input.length() - 1;
-	for (; i > floating_point + 1; i--) {
+	for (; i >= floating_point; i--) {
 		if (input[i] != '0')
 			break;
 	}
@@ -87,23 +84,19 @@ bignum::bignum(string input, int floating_point) {
 	numbers = input;
 	floating_position = floating_point - i;
 }
-
 bool bignum::isNegtive()const {
 	if (numbers.find("-") != string::npos)
 		return 1;
 	return 0;
 }
-
 bool bignum::isFloating()const {
 	if (floating_position < numbers.length())
 		return 1;
 	return 0;
 }
-
 void bignum::input() {
 	cin >> numbers;
 }
-
 const bool operator==(const bignum& lhs, const bignum& rhs) {
 	if (lhs.numbers.length() == rhs.numbers.length()) {
 		for (size_t i = 0; i < lhs.numbers.length(); i++) {
@@ -114,13 +107,11 @@ const bool operator==(const bignum& lhs, const bignum& rhs) {
 	}
 	return 0;
 }
-
 const bool operator>=(const bignum& lhs, const bignum& rhs) {
 	if (lhs < rhs)
 		return 0;
 	return 1;
 }
-
 const bool operator>(const bignum& lhs, const bignum& rhs) {
 	if (!lhs.isNegtive() && !rhs.isNegtive()) {
 		if (lhs.numbers.length() > rhs.numbers.length())
@@ -154,13 +145,11 @@ const bool operator>(const bignum& lhs, const bignum& rhs) {
 	}
 	return 0;
 }
-
 const bool operator<(const bignum& lhs, const bignum& rhs) {
 	if (lhs > rhs || (lhs == rhs))
 		return 0;
 	return 1;
 }
-
 const bignum bignum::operator+(const bignum& rhs) {
 	//negtive
 	if (isNegtive() && !rhs.isNegtive())
@@ -218,7 +207,6 @@ const bignum bignum::operator+(const bignum& rhs) {
 
 	return bignum(result);
 }
-
 const bignum bignum::operator-(const bignum& rhs) {
 	if (isFloating() || rhs.isFloating()) {
 		//int part padding
@@ -295,7 +283,6 @@ const bignum bignum::operator-(const bignum& rhs) {
 	return bignum(result);
 
 }
-
 const bignum bignum::operator*(const bignum& rhs) {
 	if (isFloating() || rhs.isFloating()) {
 		//int part padding
@@ -344,7 +331,6 @@ const bignum bignum::operator*(const bignum& rhs) {
 	//strip redundant  0
 	return result;
 }
-
 const bignum bignum::operator/(const bignum& rhs) {
 	string left_string = numbers;
 	string right_string = rhs.numbers;
@@ -357,8 +343,11 @@ const bignum bignum::operator/(const bignum& rhs) {
 		else {
 			offset = (right_string.length() - rhs.floating_position - left_string.length() + floating_position);
 		}
-		bignum left = (bignum(to_string(pow(10, offset))) * bignum(left_string));
-		bignum right = (bignum(to_string(pow(10, offset))) * bignum(right_string));
+		bignum left = (bignum(to_string((int)pow(10, offset))) * *this);
+		bignum right = (bignum(to_string((int)pow(10, offset))) * rhs);
+		cout << left;
+		cout << right;
+
 		//return  left / right;
 	}
 	string quotient = "";
@@ -403,13 +392,11 @@ const bignum bignum::operator/(const bignum& rhs) {
 
 	return bignum(quotient, floating_position);
 }
-
 bignum bignum::operator=(const bignum& rhs) {
 	numbers = rhs.numbers;
 	floating_position = rhs.floating_position;
 	return *this;
 }
-
 ostream& operator<<(ostream& str, bignum rhs) {
 	if (rhs.isFloating()) {
 		if (rhs.isNegtive())
@@ -421,7 +408,6 @@ ostream& operator<<(ostream& str, bignum rhs) {
 		str << rhs.numbers;
 	return str;
 }
-
 istream& operator>>(istream& str, bignum& rhs) {
 	string tmp;
 	str >> tmp;
