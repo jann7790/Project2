@@ -299,9 +299,11 @@ const bignum bignum::operator/(const bignum& rhs)
 {
     string left_string = numbers;
     string right_string = rhs.numbers;
-
     if (isFloating() || rhs.isFloating())
     {
+        //cout << floating_position << endl;
+        //cout << rhs.numbers << endl;
+        //cout << rhs.floating_position << endl;
         int offset;
         if (left_string.length() - floating_position > right_string.length() - rhs.floating_position)
         {
@@ -311,9 +313,12 @@ const bignum bignum::operator/(const bignum& rhs)
         {
             offset = (right_string.length() - rhs.floating_position - left_string.length() + floating_position);
         }
-        bignum left = (bignum(pow(10, offset)) * bignum(left_string));
-        bignum right = (bignum(pow(10, offset)) * bignum(right_string));
-        //return  left / right;
+        //cout << offset << endl;
+        bignum left = (bignum(to_string(pow(10, offset))) * bignum(left_string, floating_position));
+        bignum right = (bignum(to_string(pow(10, offset))) * bignum(right_string, rhs.floating_position));
+        cout << left << endl;
+        cout << right << endl;
+        return  left / right;
     }
     string quotient = "";
     bignum fraction;
@@ -395,6 +400,7 @@ istream& operator>>(istream& str, bignum& rhs)
 
 bignum::bignum(const bignum& rhs)
 {
+
     if (rhs.isFloating())
     {
         floating_position = rhs.floating_position;
@@ -441,8 +447,8 @@ bignum::bignum(string input)
 
     if (input.find(".") != string::npos)
     {
-        input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
         int floating_point = input.find(".");
+        input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
             int i = input.length() - 1;
         for (; i > floating_point + 1; i--)
         {
