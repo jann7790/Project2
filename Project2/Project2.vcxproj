@@ -141,7 +141,12 @@
   <ItemGroup>
     <ClCompile Include="bignum.cpp" />
     <ClCompile Include="bignum.h" />
+    <ClCompile Include="calculator.h" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="calculator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Arithmetic.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
