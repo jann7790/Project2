@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <stack>
 #include <string>
@@ -34,7 +35,7 @@ public:
 
 	int getValue();
 
-	void fuction();
+	int fuction();
 
 	string to_be_cal;
 	int index;

@@ -65,33 +65,33 @@ int calculator::compute(int l, oper op, int r)
 
 calculator::oper calculator::GetOp()
 {
-	oper result(-1);
-	for (; index < to_be_cal.length(); index++)
-	{
-		switch (to_be_cal[index])
-		{
-		case '+':
-			index++;
-			return oper(ADDITION);
-			break;
-		case '-':
-			index++;
-			return oper(SUBSTRACTION);
-			break;
-		case '*':
-			index++;
-			return oper(MULTIPLICATION);
-			break;
-		case '/':
-			index++;
-			return oper(DIVISION);
-			break;
-		default:
-			break;
-		}
+	if(index >= to_be_cal.length())
+		return oper(-1);
 
+	switch (to_be_cal[index])
+	{
+	case '+':
+		index++;
+		return oper(ADDITION);
+		break;
+	case '-':
+		index++;
+		return oper(SUBSTRACTION);
+		break;
+	case '*':
+		index++;
+		return oper(MULTIPLICATION);
+		break;
+	case '/':
+		index++;
+		return oper(DIVISION);
+		break;
+	default:
+		index++;
+		return oper(-1);
+		break;
 	}
-	return result;
+
 }
 
 int calculator::getValue()
@@ -101,6 +101,16 @@ int calculator::getValue()
 	{
 		if (isdigit(to_be_cal[index]))
 			num += to_be_cal[index];
+		else if (to_be_cal[index] == '(')
+		{
+			int result;
+			index++;
+			result = fuction();
+			if (to_be_cal[index-1] != ')')
+				cout << "aaaaaaaaaaaa";
+			num = to_string(result);
+			break;
+		}
 		else
 		{
 			break;
@@ -110,7 +120,7 @@ int calculator::getValue()
 	return stoi(num);
 }
 
-void calculator::fuction()
+int calculator::fuction()
 {
 	//3 + 5 + 3
 	int value = getValue();
@@ -122,8 +132,8 @@ void calculator::fuction()
 		{
 			if (stack.top().op.op == -1)
 			{
-				cout << value;
-				return;
+				stack.pop();
+				return value;
 			}
 			value = compute(stack.top().val, stack.top().op, value);
 			stack.pop();
