@@ -15,7 +15,7 @@ int main()
 	cin >> num2;
 
 	//cout << (bignum(2) ^ bignum(-2)) << endl;
-	cout << (num1 ^ num2) << endl;
+	//cout << (num1 ^ num2) << endl;
 
 	//cout << "num1 >= num2 = " << (num1 >= num2) << endl;
 	//cout << "num1 > num2 = " << (num1 > num2) << endl;
@@ -24,7 +24,7 @@ int main()
 	//cout << "num1 + num2 = " << num1 + num2 << endl;
 	//cout << "num1 - num2 = " << num1 - num2 << endl;
 	//cout << "num1 * num2 = " << num1 * num2 << endl;
-	//cout << "num1 / num2 = " << num1 / num2 << endl;
+	cout << "num1 / num2 = " << num1 / num2 << endl;
 	//cout << "num1! = " << (!num1) << endl;
 	//cout << "num1 ^ num2 = " << (num1 ^ num2) << endl;
 	//calculator ccc;

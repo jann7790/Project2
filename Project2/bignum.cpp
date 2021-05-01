@@ -470,7 +470,7 @@ const bignum bignum::operator^(const bignum& rhs)
 			result = result * *this;
 		}
 		// calculating square root
-		bignum approx(*this), error(0.00000001);
+		bignum approx(*this), error(0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001);
 		while ((approx - *this / approx) > error) {
 			approx = bignum(approx + *this / approx) / 2;
 		}
