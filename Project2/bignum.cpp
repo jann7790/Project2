@@ -102,6 +102,10 @@ const bool operator<(bignum lhs, bignum rhs) {//floating not done
 		return 0;
 	return 1;
 }
+const bool operator!=(bignum lhs, bignum rhs)
+{
+	return !(lhs == rhs);
+}
 
 bignum::bignum(double input_int)
 {
@@ -231,8 +235,10 @@ const bignum bignum::operator+(const bignum& rhs) {
 	}
 	if (carry)
 		result.insert(0, 1, carry + '0');
+	bignum res(result);
+	res.negtive = negtive;
 
-	return bignum(result);
+	return res;
 }
 const bignum bignum::operator-(const bignum& rhs) {
 	if (isFloating() || rhs.isFloating()) {
@@ -486,7 +492,9 @@ bignum bignum::operator=(const bignum& rhs) {
 }
 ostream& operator<<(ostream& str, bignum rhs) {
 	rhs.Stripzero();
-	if (rhs.isFloating()) {
+	if (rhs == bignum(0))
+		str << 0;
+	else if (rhs.isFloating()) {
 		if (rhs.isNegtive())
 			str << "-" << rhs.integer_part << "." << rhs.float_part;
 		else
