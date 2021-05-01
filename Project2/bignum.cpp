@@ -367,14 +367,6 @@ const bignum bignum::operator*(const bignum& rhs) {
 	int carry = 0;
 	string padding = "";
 
-	for (size_t i = 0; i < pow(10, 100); i++)
-	{
-		for (size_t i = 0; i < pow(10, 100); i++)
-		{
-			c[
-		}
-
-	}
 
 	bool b = new bool[rhs.integer_part.length()];
 	for (int i = rhs.integer_part.length() - 1; i >= 0; i--) {
@@ -393,8 +385,6 @@ const bignum bignum::operator*(const bignum& rhs) {
 		padding += "0";
 	}
 	result.negtive = negtive ^ rhs.negtive;
-	delete[] a;
-	delete[] b;
 	return result;
 }
 const bignum bignum::operator/(const bignum& rhs) {
