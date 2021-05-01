@@ -49,15 +49,6 @@ calculator::oper::oper(int op):op(op)
 
 calculator::opValue::opValue(oper op, bignum val) :op(op), val(val) {}
 
-bignum fact(bignum l)
-{
-	bignum s = 1;
-	for (bignum i(1); i < l || i == l; i = i + 1)
-	{
-		s = s * i;
-	}
-	return s;
-}
 
 bignum calculator::compute(bignum l, oper op, bignum r)
 {

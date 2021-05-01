@@ -28,6 +28,7 @@ public:
 	friend const bool operator<(bignum, bignum);
 	friend const bool operator<(bignum, bignum);
 	friend const bool operator==(bignum, bignum);
+	friend const bool operator!=(bignum, bignum);
 	string integer_part;
 	string float_part;
 	bool negtive;
