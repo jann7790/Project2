@@ -419,7 +419,7 @@ const bignum bignum::operator/(const bignum& rhs) {
 		bignum left(integer_part + float_part);
 		bignum right(rhs.integer_part + rhs.float_part);
 		string padding = "";
-		if (float_part > rhs.float_part)
+		if (float_part.length() > rhs.float_part.length())
 		{
 			padding.insert(0, float_part.length() - rhs.float_part.length(), '0');
 			right.integer_part += padding;
@@ -441,11 +441,8 @@ const bignum bignum::operator/(const bignum& rhs) {
 	int length = left.length();
 	int floating_position = left.length();
 	string padding = "";
-	if (left.length() < 30)
-	{
-		padding.insert(0, 30 - left.length(), '0');
-		left += padding;
-	}
+	padding.insert(0, 10, '0');
+	left += padding;
 		
 	for (int i = 0; i < left.length() ; i++) {
 		fraction = bignum(left.substr(0, i+1));
