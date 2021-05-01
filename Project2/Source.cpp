@@ -16,29 +16,24 @@ int main()
 	//cin >> num2;
 
 	//cout << (bignum(2) ^ bignum(-2)) << endl;
-	//cout << (num1 ^ num2) << endl;
+	cout << (num1 ^ num2) << endl;
 
-/*	cout << "num1 >= num2 = " << (num1 >= num2) << endl;
-	cout << "num1 > num2 = " << (num1 > num2) << endl;
-	cout << "num1 < num2 = " << (num1 < num2) << endl;
-	cout << "num1 == num2 = " << (num1 == num2) << endl;
-	cout << "num1 + num2 = " << num1 + num2 << endl;
-	cout << "num1 - num2 = " << num1 - num2 << endl;
-	cout << "num1 * num2 = " << num1 * num2 << endl;
-	cout << "num1 / num2 = " << num1 / num2 << endl;
-	cout << "num1! = " << (!num1) << endl;
-	cout << "num1 ^ num2 = " << (num1 ^ num2) << endl;
-	
-	cin.ignore(123123123123, '\n');
-	cout << "input calculation:";*/
-	cout << pow(10, 100);
-	calculator ccc;
-	while (1)
-	{
-		ccc.input();
-		ccc.Removewhite();
-		cout << ccc.fuction() << endl;
-	}
-	
+	//cout << "num1 >= num2 = " << (num1 >= num2) << endl;
+	//cout << "num1 > num2 = " << (num1 > num2) << endl;
+	//cout << "num1 < num2 = " << (num1 < num2) << endl;
+	//cout << "num1 == num2 = " << (num1 == num2) << endl;
+	//cout << "num1 + num2 = " << num1 + num2 << endl;
+	//cout << "num1 - num2 = " << num1 - num2 << endl;
+	//cout << "num1 * num2 = " << num1 * num2 << endl;
+	//cout << "num1 / num2 = " << num1 / num2 << endl;
+	//cout << "num1! = " << (!num1) << endl;
+	//cout << "num1 ^ num2 = " << (num1 ^ num2) << endl;
+	//calculator ccc;
+	//cin.ignore(123123123123, '\n');
+	//cout << "input calculation:";
+	//getline(cin, ccc.to_be_cal);
+	//ccc.Removewhite();
+	////cout << ccc.to_be_cal;
+	//cout << ccc.fuction();
 
 }
