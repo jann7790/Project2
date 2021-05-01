@@ -107,55 +107,6 @@ const bool operator!=(bignum lhs, bignum rhs)
 	return !(lhs == rhs);
 }
 
-const bignum bignum::operator!(void)
-{
-	if (isFloating())
-	{
-		cout << "no\n";
-		return bignum("0");
-	}
-	if (isNegtive())
-	{
-		cout << "no\n";
-		return bignum("0");
-	}
-	bignum result(1);
-	for (int i = 1; i < *this || i == *this; i++)
-	{
-		cout << i << endl;
-		result = result * i;
-	}
-	return result;
-}
-const bignum bignum::operator^(const bignum& rhs)
-{
-	//開根號還沒寫 sqrt not yet done
-	if (rhs.isFloating())
-	{
-		bignum result(1);
-		for (size_t i = 0; i < rhs; i++)
-		{
-			result = result * *this;
-		}
-		return bignum(1) / result;
-	}
-	if (rhs.isNegtive())
-	{
-		bignum result(1);
-		for (int i = 0; i > rhs; i--)
-		{
-			result = result * *this;
-		}
-		return bignum(1) / result;
-		
-	}
-	bignum result(1);
-	for (size_t i = 0; i < rhs; i++)
-	{
-		result = result * *this;
-	}
-	return result;
-}
 bignum::bignum(double input_int)
 {
 	negtive = 0;
@@ -175,13 +126,12 @@ bignum::bignum(double input_int)
 	}
 
 }
-
 bignum::bignum(const bignum& rhs) {
 	integer_part = rhs.integer_part;
 	float_part = rhs.float_part;
 	negtive = rhs.negtive;
 }
-bignum::bignum() :integer_part("0"), float_part("0"), negtive(0){
+bignum::bignum() :integer_part("0"), float_part("0"), negtive(0) {
 }
 bignum::bignum(string input) {
 	negtive = 0;
@@ -206,9 +156,9 @@ bignum::bignum(string input) {
 
 }
 bignum::bignum(string input, string input_floating, bool negtive) {
-		integer_part = input;
-		float_part = input_floating;
-		negtive = negtive;
+	integer_part = input;
+	float_part = input_floating;
+	negtive = negtive;
 }
 bool bignum::isNegtive()const {
 	return negtive;
@@ -218,10 +168,10 @@ bool bignum::isFloating()const {
 	{
 		if (float_part[i] != '0')
 			return 1;
-
 	}
 	return 0;
 }
+
 const bignum bignum::operator+(const bignum& rhs) {
 	//negtive
 	if (!isNegtive() && rhs.isNegtive())
@@ -255,13 +205,12 @@ const bignum bignum::operator+(const bignum& rhs) {
 		//cout << right_floating_num << endl;
 		string left = left_int_num + left_floating_num;
 		string right = right_int_num + right_floating_num;
-		
-			
+
+
 		bignum result = bignum(bignum(left) + bignum(right));
 		//cout << result << endl;
 		result.float_part = result.integer_part.substr(result.integer_part.length() - left_floating_num.length(), result.integer_part.length());
-		result.integer_part = result.integer_part.substr(0, result.integer_part.length() - left_floating_num.length() );
-		result.negtive = negtive;
+		result.integer_part = result.integer_part.substr(0, result.integer_part.length() - left_floating_num.length());
 		return result;
 
 	}
@@ -421,7 +370,7 @@ const bignum bignum::operator/(const bignum& rhs) {
 		cout << "divide 0\n";
 		return bignum("0");
 	}
-		
+
 	if (isFloating() || rhs.isFloating()) {
 		bignum left(integer_part + float_part);
 		bignum right(rhs.integer_part + rhs.float_part);
@@ -450,9 +399,9 @@ const bignum bignum::operator/(const bignum& rhs) {
 	string padding = "";
 	padding.insert(0, 10, '0');
 	left += padding;
-		
-	for (int i = 0; i < left.length() ; i++) {
-		fraction = bignum(left.substr(0, i+1));
+
+	for (int i = 0; i < left.length(); i++) {
+		fraction = bignum(left.substr(0, i + 1));
 		//cout << "frac :"<<fraction << endl;
 		//cout << "remaing" << left << endl;
 
@@ -460,7 +409,7 @@ const bignum bignum::operator/(const bignum& rhs) {
 			while (fraction >= bignum(right)) {
 				fraction = fraction - bignum(right);
 				count++;
-			//	cout << "faaaaaaarac :" << fraction << endl;
+				//	cout << "faaaaaaarac :" << fraction << endl;
 			}
 			if (fraction.isNegtive()) {
 				count--;
@@ -483,6 +432,58 @@ const bignum bignum::operator/(const bignum& rhs) {
 	result.negtive = negtive ^ rhs.negtive;
 	return result;
 }
+const bignum bignum::operator!(void)
+{
+	if (isFloating())
+	{
+		cout << "no\n";
+		return bignum("0");
+	}
+	if (isNegtive())
+	{
+		cout << "no\n";
+		return bignum("0");
+	}
+	bignum result(1);
+	for (int i = 1; i < *this || i == *this; i++)
+	{
+		cout << i << endl;
+		result = result * i;
+	}
+	return result;
+}
+const bignum bignum::operator^(const bignum& rhs)
+{
+	if (rhs.isNegtive()) {
+		// according to TA's reply, ^ should return 0 if power < 0
+			//bignum result(1);
+			//for (int i = 0; i > rhs; i--) {
+			//	result = result * *this;
+			//}
+			//return bignum(1) / result;
+		return bignum(0);
+	}
+
+	if (rhs.isFloating()) {
+		bignum result(1);
+		for (size_t i = 1; i < rhs; i++) {
+			result = result * *this;
+		}
+		// calculating square root
+		bignum approx(*this), error(0.00000001);
+		while ((approx - *this / approx) > error) {
+			approx = bignum(approx + *this / approx) / 2;
+		}
+		return  result * approx;
+	}
+
+	bignum result(1);
+	for (size_t i = 0; i < rhs; i++) {
+		result = result * *this;
+	}
+	return result;
+}
+
 bignum bignum::operator=(const bignum& rhs) {
 	integer_part = rhs.integer_part;
 	float_part = rhs.float_part;
@@ -501,7 +502,7 @@ ostream& operator<<(ostream& str, bignum rhs) {
 	}
 	else
 		if (rhs.isNegtive())
-			str << "-" << rhs.integer_part ;
+			str << "-" << rhs.integer_part;
 		else
 			str << rhs.integer_part;
 	return str;

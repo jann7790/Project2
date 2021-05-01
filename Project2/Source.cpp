@@ -13,22 +13,26 @@ int main()
 	cout << "input a, b:";
 	cin >> num1;
 	cin >> num2;
-	cout << "num1 >= num2 = " << (num1 >= num2) << endl;
-	cout << "num1 > num2 = " << (num1 > num2) << endl;
-	cout << "num1 < num2 = " << (num1 < num2) << endl;
-	cout << "num1 == num2 = " << (num1 == num2) << endl;
-	cout << "num1 + num2 = " << num1 + num2 << endl;
-	cout << "num1 - num2 = " << num1 - num2 << endl;
-	cout << "num1 * num2 = " << num1 * num2 << endl;
-	cout << "num1 / num2 = " << num1 / num2 << endl;
+
+	//cout << (bignum(2) ^ bignum(-2)) << endl;
+	cout << (num1 ^ num2) << endl;
+
+	//cout << "num1 >= num2 = " << (num1 >= num2) << endl;
+	//cout << "num1 > num2 = " << (num1 > num2) << endl;
+	//cout << "num1 < num2 = " << (num1 < num2) << endl;
+	//cout << "num1 == num2 = " << (num1 == num2) << endl;
+	//cout << "num1 + num2 = " << num1 + num2 << endl;
+	//cout << "num1 - num2 = " << num1 - num2 << endl;
+	//cout << "num1 * num2 = " << num1 * num2 << endl;
+	//cout << "num1 / num2 = " << num1 / num2 << endl;
 	//cout << "num1! = " << (!num1) << endl;
 	//cout << "num1 ^ num2 = " << (num1 ^ num2) << endl;
-	calculator ccc;
-	cin.ignore(123123123123, '\n');
-	cout << "input calculation:";
-	getline(cin, ccc.to_be_cal);
-	ccc.Removewhite();
-	//cout << ccc.to_be_cal;
-	cout << ccc.fuction();
+	//calculator ccc;
+	//cin.ignore(123123123123, '\n');
+	//cout << "input calculation:";
+	//getline(cin, ccc.to_be_cal);
+	//ccc.Removewhite();
+	////cout << ccc.to_be_cal;
+	//cout << ccc.fuction();
 
 }
