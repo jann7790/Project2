@@ -2,6 +2,7 @@
 #include "input.h"
 #include <string>
 #include <iostream>
+
 using namespace variable;
 using namespace std;
 int main()
@@ -10,29 +11,34 @@ int main()
 	bignum num2;
 	bignum num3;
 	bignum num4;
-	cout << "input a, b:";
-	cin >> num1;
-	cin >> num2;
+	//cout << "input a, b:";
+	//cin >> num1;
+	//cin >> num2;
 
 	//cout << (bignum(2) ^ bignum(-2)) << endl;
-	cout << (num1 ^ num2) << endl;
+	//cout << (num1 ^ num2) << endl;
 
-	//cout << "num1 >= num2 = " << (num1 >= num2) << endl;
-	//cout << "num1 > num2 = " << (num1 > num2) << endl;
-	//cout << "num1 < num2 = " << (num1 < num2) << endl;
-	//cout << "num1 == num2 = " << (num1 == num2) << endl;
-	//cout << "num1 + num2 = " << num1 + num2 << endl;
-	//cout << "num1 - num2 = " << num1 - num2 << endl;
-	//cout << "num1 * num2 = " << num1 * num2 << endl;
-	//cout << "num1 / num2 = " << num1 / num2 << endl;
-	//cout << "num1! = " << (!num1) << endl;
-	//cout << "num1 ^ num2 = " << (num1 ^ num2) << endl;
-	//calculator ccc;
-	//cin.ignore(123123123123, '\n');
-	//cout << "input calculation:";
-	//getline(cin, ccc.to_be_cal);
-	//ccc.Removewhite();
-	////cout << ccc.to_be_cal;
-	//cout << ccc.fuction();
+/*	cout << "num1 >= num2 = " << (num1 >= num2) << endl;
+	cout << "num1 > num2 = " << (num1 > num2) << endl;
+	cout << "num1 < num2 = " << (num1 < num2) << endl;
+	cout << "num1 == num2 = " << (num1 == num2) << endl;
+	cout << "num1 + num2 = " << num1 + num2 << endl;
+	cout << "num1 - num2 = " << num1 - num2 << endl;
+	cout << "num1 * num2 = " << num1 * num2 << endl;
+	cout << "num1 / num2 = " << num1 / num2 << endl;
+	cout << "num1! = " << (!num1) << endl;
+	cout << "num1 ^ num2 = " << (num1 ^ num2) << endl;
+	
+	cin.ignore(123123123123, '\n');
+	cout << "input calculation:";*/
+	cout << pow(10, 100);
+	calculator ccc;
+	while (1)
+	{
+		ccc.input();
+		ccc.Removewhite();
+		cout << ccc.fuction() << endl;
+	}
+	
 
 }

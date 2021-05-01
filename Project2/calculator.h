@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stack>
 #include <string>
-#include "bignum.h"
+#include "bignum.h" 
 using namespace std;
 enum MyEnum
 {
@@ -42,6 +42,9 @@ public:
 
 	void Removewhite();
 
+	string getnum();
+
+	void input();
 	string to_be_cal;
 	int index;
 	stack<opValue> stack;

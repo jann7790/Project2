@@ -131,7 +131,7 @@ bignum::bignum(const bignum& rhs) {
 	float_part = rhs.float_part;
 	negtive = rhs.negtive;
 }
-bignum::bignum() :integer_part("0"), float_part("0"), negtive(0) {
+bignum::bignum() :integer_part("0"), float_part("0"), negtive(false) {
 }
 bignum::bignum(string input) {
 	negtive = 0;
@@ -155,10 +155,10 @@ bignum::bignum(string input) {
 	}
 
 }
-bignum::bignum(string input, string input_floating, bool negtive) {
+bignum::bignum(string input, string input_floating, bool neg) {
 	integer_part = input;
 	float_part = input_floating;
-	negtive = negtive;
+	negtive = neg;
 }
 bool bignum::isNegtive()const {
 	return negtive;
@@ -173,11 +173,13 @@ bool bignum::isFloating()const {
 }
 
 const bignum bignum::operator+(const bignum& rhs) {
-	//negtive
+	//+ + -
 	if (!isNegtive() && rhs.isNegtive())
-		return bignum(*this) - bignum(rhs);
+		return *this - bignum(rhs.integer_part, rhs.float_part, false);
+	//- + +
 	if (isNegtive() && !rhs.isNegtive())
-		return bignum(rhs) - bignum(*this);
+		return bignum(rhs) - bignum(integer_part, float_part, false);
+	//- + -
 	//floating
 	if (isFloating() || rhs.isFloating()) {
 		string left_int_num = integer_part;
@@ -209,6 +211,8 @@ const bignum bignum::operator+(const bignum& rhs) {
 
 		bignum result = bignum(bignum(left) + bignum(right));
 		//cout << result << endl;
+		if (isNegtive() && rhs.isNegtive())
+			result.negtive = true;
 		result.float_part = result.integer_part.substr(result.integer_part.length() - left_floating_num.length(), result.integer_part.length());
 		result.integer_part = result.integer_part.substr(0, result.integer_part.length() - left_floating_num.length());
 		return result;
@@ -236,11 +240,28 @@ const bignum bignum::operator+(const bignum& rhs) {
 	if (carry)
 		result.insert(0, 1, carry + '0');
 	bignum res(result);
-	res.negtive = negtive;
+	if(isNegtive() && rhs.isNegtive())
+		res.negtive = negtive;
 
 	return res;
 }
 const bignum bignum::operator-(const bignum& rhs) {
+	//- - +
+	if (isNegtive() && !rhs.isNegtive())
+	{
+		return bignum(integer_part, float_part, true) + bignum(rhs.integer_part, rhs.float_part, true);
+	}
+	//- - -
+	else if (isNegtive() && rhs.isNegtive())
+	{
+		return bignum(rhs.integer_part, rhs.float_part, false) - bignum(integer_part, float_part, false);
+	}
+	//+ - -
+	else if (!isNegtive() && rhs.isNegtive())
+	{
+		return bignum(rhs.integer_part, rhs.float_part, false) + bignum(integer_part, float_part, false);
+	}
+
 	if (isFloating() || rhs.isFloating()) {
 		//int part padding
 		string left_int_num = integer_part;
@@ -339,12 +360,23 @@ const bignum bignum::operator*(const bignum& rhs) {
 		return result;
 	}
 	string str = "";
-	str.insert(0, rhs.integer_part.length() + integer_part.length(), '0');
+	str.insert(0, MAX, '0');
 	bignum result(str);
 	string line = "";
 	int temp;
 	int carry = 0;
 	string padding = "";
+
+	for (size_t i = 0; i < pow(10, 100); i++)
+	{
+		for (size_t i = 0; i < pow(10, 100); i++)
+		{
+			c[
+		}
+
+	}
+
+	bool b = new bool[rhs.integer_part.length()];
 	for (int i = rhs.integer_part.length() - 1; i >= 0; i--) {
 		for (int j = integer_part.length() - 1; j >= 0; j--) {
 			temp = (integer_part[j] - '0') * (rhs.integer_part[i] - '0') + carry;
@@ -361,7 +393,8 @@ const bignum bignum::operator*(const bignum& rhs) {
 		padding += "0";
 	}
 	result.negtive = negtive ^ rhs.negtive;
-
+	delete[] a;
+	delete[] b;
 	return result;
 }
 const bignum bignum::operator/(const bignum& rhs) {
@@ -397,10 +430,10 @@ const bignum bignum::operator/(const bignum& rhs) {
 	int length = left.length();
 	int floating_position = left.length();
 	string padding = "";
-	padding.insert(0, 10, '0');
+	padding.insert(0, MAX-left.length(), '0');
 	left += padding;
 
-	for (int i = 0; i < left.length(); i++) {
+	for (int i = 0, j = 0; i < left.length(); i++, j++) {
 		fraction = bignum(left.substr(0, i + 1));
 		//cout << "frac :"<<fraction << endl;
 		//cout << "remaing" << left << endl;
@@ -418,6 +451,7 @@ const bignum bignum::operator/(const bignum& rhs) {
 			//cout << "frac :" << fraction << endl;
 			//cout << "count:" <<count << endl;
 			left = fraction.integer_part + left.substr(i + 1, left.length());
+			j = 0;
 			//cout << "remaing" << left << endl;
 			quotient += to_string(count);
 		}

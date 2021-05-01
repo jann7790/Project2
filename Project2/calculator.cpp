@@ -42,13 +42,13 @@ calculator::oper::oper(int op):op(op)
 		associativity = 'R';
 		break;
 	default:
+		precedence = 999;
+		associativity = 'L';
 		break;
 	}
 }
 
-
 calculator::opValue::opValue(oper op, bignum val) :op(op), val(val) {}
-
 
 bignum calculator::compute(bignum l, oper op, bignum r)
 {
@@ -117,35 +117,51 @@ calculator::oper calculator::GetOp()
 
 }
 
-bignum calculator::getValue()
+string calculator::getnum()
 {
 	string num = "";
 	for (; index < to_be_cal.length(); index++)
 	{
 		if (isdigit(to_be_cal[index]) || to_be_cal[index] == '.')
 			num += to_be_cal[index];
-		else if (to_be_cal[index] == '(')
-		{
-			bignum result;
-			index++;
-			result = fuction();
-			if (to_be_cal[index-1] != ')')
-				cout << "aaaaaaaaaaaa";
-			return result;
-			break;
-		}
 		else
-		{
 			break;
-		}
 	}
-	if (num == "")return 0;
-	return bignum(num);
+	return num;
+}
+bignum calculator::getValue()
+{
+	bignum result(0);
+	if(index < to_be_cal.length())
+	switch (to_be_cal[index])
+	{
+	case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':case '0':
+		result = bignum(getnum());
+		break;
+	case '(':
+		index++;
+		result = fuction();
+			index++;
+		break;
+	case '-':
+		index++;
+		result = bignum(-1) * getValue();
+		break;
+	case '+':
+		index++;
+		result = getValue();
+		break;
+	default:
+		index++;
+		break;
+	}
+	return result;
 }
 
 bignum calculator::fuction()
 {
 	//3 + 5 + 3
+
 	bignum value = getValue();
 	stack.push(opValue(oper(-1), 0));
 	while (!stack.empty())
@@ -180,4 +196,8 @@ void calculator::Removewhite()
 	}
 }
 
-
+void calculator::input()
+{
+	getline(cin, to_be_cal);
+	index = 0;
+}
