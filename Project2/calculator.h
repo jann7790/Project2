@@ -41,6 +41,7 @@ public:
 	bignum fuction();
 
 	void Removewhite();
+
 	string to_be_cal;
 	int index;
 	stack<opValue> stack;

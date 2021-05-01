@@ -1,6 +1,8 @@
 #include "calculator.h"
+#include "input.h"
 #include <string>
 #include <iostream>
+using namespace variable;
 using namespace std;
 int main()
 {
