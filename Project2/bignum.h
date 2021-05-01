@@ -14,13 +14,14 @@ public:
 	bool isNegtive()const;
 	bool isFloating()const;
 	void Stripzero();
+
 	bignum operator=(const bignum& rhs);
-	const bignum operator!(void);
-	const bignum operator^(const bignum& rhs);
 	const bignum operator+(const bignum& rhs);
 	const bignum operator-(const bignum& rhs);
 	const bignum operator*(const bignum& rhs);
 	const bignum operator/(const bignum& rhs);
+	const bignum operator!(void);
+	const bignum operator^(const bignum& rhs);
 	friend ostream& operator<<(ostream& str, bignum rhs);
 	friend istream& operator>>(istream& str, bignum& rhs);
 	friend const bool operator>(bignum, bignum);
