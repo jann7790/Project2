@@ -1,6 +1,18 @@
 #pragma once
 #include<iostream>
 using namespace std;
+
+string add(string, string);
+string subtract(string, string);
+string multiply(string, string);
+string divide(string, string);
+bool is_floationg(string&, string&);
+void hi(string&);
+int is_floating_for_M(string&, string&);
+void hi_M(string&, int);
+bool is_floating_for_div(string&, string&);
+void hi_div(string&);
+
 int trans(char ch)
 {
     return static_cast<int>(ch) - static_cast<int>('0');

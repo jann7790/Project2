@@ -1,127 +1,71 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <string>
 #include "bignum.h"
-#define DIVISION_DECIMAL_PLACE 10
 using namespace std;
 
-bignum::bignum(const bignum& rhs) {
-	if (rhs.isFloating()) {
-		floating_position = rhs.floating_position;
-		int i = 0;
-		for (i = rhs.numbers.length(); i >= floating_position; i++) {
-			if (rhs.numbers[i] != '0')
-				break;
-		}
-		numbers = rhs.numbers.substr(0, i);
-	}
-	else {
-		floating_position = rhs.floating_position;
-		int i = 0;
-		for (i = 0; i < rhs.numbers.length(); i++)
-		{
-			if (rhs.numbers[i] != '0')
-				break;
-		}
-		numbers = rhs.numbers.substr(i, rhs.numbers.length());
-	}
-}
-bignum::bignum() :numbers("0"), floating_position(0) {
-}
-bignum::bignum(string input) {
-	if (input == "") {
-		numbers = "0";
-		floating_position = input.length();
-	}
-
-	if (input.find(".") != string::npos) {
-
-		int floating_point = input.find(".");
-		input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
-		int i = input.length() - 1;
-		for (; i >= floating_point ; i--) {
-			if (input[i] != '0')
-				break;
-		}
-		input = input.substr(0, i + 1);
-		i = 0;
-		for (; i < floating_point - 1; i++) {
-			if (input[i] != '0')
-				break;
-		}
-		input = input.substr(i, input.length());
-		numbers = input;
-		floating_position = floating_point - i;
-	}
-	else {
-		int i = 0;
-		for (; i < input.length() - 1; i++) {
-			if (input[i] != '0')
-				break;
-		}
-		numbers = input.substr(i, input.length());
-		floating_position = numbers.length();
-	}
-
-}
-bignum::bignum(string input, int floating_point) {
-	if (input == "") {
-		numbers = "0";
-		floating_position = input.length();
-	}
-	int i = input.length() - 1;
-	for (; i >= floating_point; i--) {
-		if (input[i] != '0')
+void bignum::Stripzero()
+{
+	int i = 0;
+	for (i = 0; i < integer_part.length() - 1; i++)
+	{
+		if (integer_part[i] != '0')
 			break;
 	}
-	input = input.substr(0, i + 1);
-	i = 0;
-	for (; i < floating_point - 1; i++) {
-		if (input[i] != '0')
+	integer_part = integer_part.substr(i, integer_part.length());
+
+
+	for (i = float_part.length() - 1; i >= 1; i--)
+	{
+		if (float_part[i] != '0')
 			break;
 	}
-	input = input.substr(i, input.length());
-	numbers = input;
-	floating_position = floating_point - i;
+	float_part = float_part.substr(0, i + 1);
 }
-bool bignum::isNegtive()const {
-	if (numbers.find("-") != string::npos)
-		return 1;
-	return 0;
-}
-bool bignum::isFloating()const {
-	if (floating_position < numbers.length())
-		return 1;
-	return 0;
-}
-void bignum::input() {
-	cin >> numbers;
-}
-const bool operator==(const bignum& lhs, const bignum& rhs) {
-	if (lhs.numbers.length() == rhs.numbers.length()) {
-		for (size_t i = 0; i < lhs.numbers.length(); i++) {
-			if (lhs.numbers[i] != rhs.numbers[i])
+
+const bool operator==(bignum lhs, bignum rhs) {//floating not done
+	lhs.Stripzero();
+	rhs.Stripzero();
+	if (lhs.integer_part.length() == rhs.integer_part.length() && lhs.float_part.length() == lhs.float_part.length()) {
+		for (size_t i = 0; i < lhs.integer_part.length(); i++) {
+			if (lhs.integer_part[i] != rhs.integer_part[i])
+				return 0;
+		}
+		for (size_t i = 0; i < lhs.float_part.length(); i++) {
+			if (lhs.float_part[i] != rhs.float_part[i])
 				return 0;
 		}
 		return 1;
 	}
+
 	return 0;
 }
-const bool operator>=(const bignum& lhs, const bignum& rhs) {
+const bool operator>=(bignum lhs, bignum rhs) {
+	lhs.Stripzero();
+	rhs.Stripzero();
+
 	if (lhs < rhs)
 		return 0;
 	return 1;
 }
-const bool operator>(const bignum& lhs, const bignum& rhs) {
+const bool operator>(bignum lhs, bignum rhs) {//floating not done
+	lhs.Stripzero();
+	rhs.Stripzero();
 	if (!lhs.isNegtive() && !rhs.isNegtive()) {
-		if (lhs.numbers.length() > rhs.numbers.length())
+		if (lhs.integer_part.length() > rhs.integer_part.length())
 			return 1;
-		if (lhs.numbers.length() < rhs.numbers.length())
+		if (lhs.integer_part.length() < rhs.integer_part.length())
 			return 0;
-		for (size_t i = 0; i < lhs.numbers.length(); i++) {
-			if (lhs.numbers[i] > rhs.numbers[i])
+		for (size_t i = 0; i < lhs.integer_part.length(); i++) {
+			if (lhs.integer_part[i] > rhs.integer_part[i])
 				return 1;
-			if (lhs.numbers[i] < rhs.numbers[i])
+			if (lhs.integer_part[i] < rhs.integer_part[i])
+				return 0;
+		}
+		for (size_t i = 0; i < lhs.float_part.length(); i++) {
+			if (lhs.float_part[i] > rhs.float_part[i])
+				return 1;
+			if (lhs.float_part[i] < rhs.float_part[i])
 				return 0;
 		}
 	}
@@ -132,68 +76,200 @@ const bool operator>(const bignum& lhs, const bignum& rhs) {
 		return 0;
 	}
 	else {
-		if (lhs.numbers.length() > rhs.numbers.length())
+		if (lhs.integer_part.length() > rhs.integer_part.length())
 			return 0;
-		if (lhs.numbers.length() < rhs.numbers.length())
+		if (lhs.integer_part.length() < rhs.integer_part.length())
 			return 1;
-		for (size_t i = 1; i < lhs.numbers.length(); i++) {
-			if (lhs.numbers[i] > rhs.numbers[i])
+		for (size_t i = 0; i < lhs.integer_part.length(); i++) {
+			if (lhs.integer_part[i] > rhs.integer_part[i])
 				return 0;
-			if (lhs.numbers[i] < rhs.numbers[i])
+			if (lhs.integer_part[i] < rhs.integer_part[i])
+				return 1;
+		}
+		for (size_t i = 0; i < lhs.float_part.length(); i++) {
+			if (lhs.float_part[i] > rhs.float_part[i])
+				return 0;
+			if (lhs.float_part[i] < rhs.float_part[i])
 				return 1;
 		}
 	}
 	return 0;
 }
-const bool operator<(const bignum& lhs, const bignum& rhs) {
+const bool operator<(bignum lhs, bignum rhs) {//floating not done
+	lhs.Stripzero();
+	rhs.Stripzero();
 	if (lhs > rhs || (lhs == rhs))
 		return 0;
 	return 1;
 }
+
+const bignum bignum::operator!(void)
+{
+	if (isFloating())
+	{
+		cout << "no\n";
+		return bignum("0");
+	}
+	if (isNegtive())
+	{
+		cout << "no\n";
+		return bignum("0");
+	}
+	bignum result(1);
+	for (int i = 1; i < *this || i == *this; i++)
+	{
+		cout << i << endl;
+		result = result * i;
+	}
+	return result;
+}
+const bignum bignum::operator^(const bignum& rhs)
+{
+	//開根號還沒寫 sqrt not yet done
+	if (rhs.isFloating())
+	{
+		bignum result(1);
+		for (size_t i = 0; i < rhs; i++)
+		{
+			result = result * *this;
+		}
+		return bignum(1) / result;
+	}
+	if (rhs.isNegtive())
+	{
+		bignum result(1);
+		for (int i = 0; i > rhs; i--)
+		{
+			result = result * *this;
+		}
+		return bignum(1) / result;
+		
+	}
+	bignum result(1);
+	for (size_t i = 0; i < rhs; i++)
+	{
+		result = result * *this;
+	}
+	return result;
+}
+bignum::bignum(double input_int)
+{
+	negtive = 0;
+	string input = to_string(input_int);
+	if (input.find("-") != string::npos)
+	{
+		input = input.substr(1, input.length());
+		negtive = 1;
+	}
+	if (input.find(".") != string::npos) {
+		integer_part = input.substr(0, input.find("."));
+		float_part = input.substr(input.find(".") + 1, input.length());
+	}
+	else {
+		integer_part = input;
+		float_part = "0";
+	}
+
+}
+
+bignum::bignum(const bignum& rhs) {
+	integer_part = rhs.integer_part;
+	float_part = rhs.float_part;
+	negtive = rhs.negtive;
+}
+bignum::bignum() :integer_part("0"), float_part("0"), negtive(0){
+}
+bignum::bignum(string input) {
+	negtive = 0;
+	if (input == "") {
+		integer_part = "0";
+		float_part = "0";
+		negtive = 0;
+	}
+	if (input.find("-") != string::npos)
+	{
+		input = input.substr(1, input.length());
+		negtive = 1;
+	}
+	if (input.find(".") != string::npos) {
+		integer_part = input.substr(0, input.find("."));
+		float_part = input.substr(input.find(".") + 1, input.length());
+	}
+	else {
+		integer_part = input;
+		float_part = "0";
+	}
+
+}
+bignum::bignum(string input, string input_floating, bool negtive) {
+		integer_part = input;
+		float_part = input_floating;
+		negtive = negtive;
+}
+bool bignum::isNegtive()const {
+	return negtive;
+}
+bool bignum::isFloating()const {
+	for (size_t i = 0; i < float_part.length(); i++)
+	{
+		if (float_part[i] != '0')
+			return 1;
+
+	}
+	return 0;
+}
 const bignum bignum::operator+(const bignum& rhs) {
 	//negtive
+	if (!isNegtive() && rhs.isNegtive())
+		return bignum(*this) - bignum(rhs);
 	if (isNegtive() && !rhs.isNegtive())
-		return bignum(rhs) - bignum(numbers.substr(1, numbers.length()));
+		return bignum(rhs) - bignum(*this);
 	//floating
 	if (isFloating() || rhs.isFloating()) {
-		bignum int_part = bignum(numbers.substr(0, floating_position)) + bignum(rhs.numbers.substr(0, rhs.floating_position));
-		int result_position = int_part.numbers.length();
-		string left_floating_num = numbers.substr(floating_position, numbers.length());
-		string right_floating_num = rhs.numbers.substr(rhs.floating_position, rhs.numbers.length());
+		string left_int_num = integer_part;
+		string right_int_num = rhs.integer_part;
+		int int_len = 0;
+		//int padding
+		if (left_int_num.length() > right_int_num.length()) {
+			right_int_num.insert(0, left_int_num.length() - right_int_num.length(), '0');
+		}
+		else {
+			left_int_num.insert(0, right_int_num.length() - left_int_num.length(), '0');
+		}
+		int_len = left_int_num.length();
+		//float part padding
+		string left_floating_num = float_part;
+		string right_floating_num = rhs.float_part;
 		if (left_floating_num.length() > right_floating_num.length()) {
 			right_floating_num.append(left_floating_num.length() - right_floating_num.length(), '0');
 		}
 		else {
 			left_floating_num.append(right_floating_num.length() - left_floating_num.length(), '0');
 		}
-		bignum floating_part = bignum(left_floating_num) + bignum(right_floating_num);
 
-		int check;
-		if (left_floating_num.length() > right_floating_num.length())
-			check = left_floating_num.length();
-		else
-			check = right_floating_num.length();
+		//cout << left_floating_num << endl;
+		//cout << right_floating_num << endl;
+		string left = left_int_num + left_floating_num;
+		string right = right_int_num + right_floating_num;
+		
+			
+		bignum result = bignum(bignum(left) + bignum(right));
+		//cout << result << endl;
+		result.float_part = result.integer_part.substr(result.integer_part.length() - left_floating_num.length(), result.integer_part.length());
+		result.integer_part = result.integer_part.substr(0, result.integer_part.length() - left_floating_num.length() );
+		return result;
 
-		if (floating_part.numbers.length() > check)
-		{
-			int_part = int_part + bignum(to_string(floating_part.numbers[0]));
-			floating_part.numbers = floating_part.numbers.substr(1, floating_part.numbers.length());
-		}
-
-		string result = int_part.numbers + floating_part.numbers;
-
-		return bignum(result, result_position);
 	}
-	string left_string = numbers;
-	string right_string = rhs.numbers;
+	//integer
+	string left_string = integer_part;
+	string right_string = rhs.integer_part;
 	string result = "";
-	if (numbers.length() > rhs.numbers.length()) {
-		right_string.insert(0, numbers.length() - right_string.length(), '0');
+	if (integer_part.length() > rhs.integer_part.length()) {
+		right_string.insert(0, integer_part.length() - right_string.length(), '0');
 	}
 	else {
-		left_string.insert(0, right_string.length() - numbers.length(), '0');
+		left_string.insert(0, right_string.length() - integer_part.length(), '0');
 	}
-
 	int temp;
 	int length = left_string.length();
 	int carry = 0;
@@ -211,40 +287,45 @@ const bignum bignum::operator+(const bignum& rhs) {
 const bignum bignum::operator-(const bignum& rhs) {
 	if (isFloating() || rhs.isFloating()) {
 		//int part padding
-		string left_int_num = numbers.substr(0, floating_position);
-		string right_int_num = rhs.numbers.substr(0, rhs.floating_position);
+		string left_int_num = integer_part;
+		string right_int_num = rhs.integer_part;
+		int int_len = 0;
 		if (left_int_num.length() > right_int_num.length()) {
 			right_int_num.insert(0, left_int_num.length() - right_int_num.length(), '0');
 		}
 		else {
 			left_int_num.insert(0, right_int_num.length() - left_int_num.length(), '0');
 		}
-
+		int_len = left_int_num.length();
 		//float part padding
-		string left_floating_num = numbers.substr(floating_position, numbers.length());
-		string right_floating_num = rhs.numbers.substr(rhs.floating_position, rhs.numbers.length());
+		string left_floating_num = float_part;
+		string right_floating_num = rhs.float_part;
 		if (left_floating_num.length() > right_floating_num.length()) {
 			right_floating_num.append(left_floating_num.length() - right_floating_num.length(), '0');
 		}
 		else {
 			left_floating_num.append(right_floating_num.length() - left_floating_num.length(), '0');
 		}
+
 		string left = left_int_num + left_floating_num;
 		string right = right_int_num + right_floating_num;
-
-		bignum result = bignum(left) - bignum(right);
-		result.floating_position = left_int_num.length();
-
+		//cout << left << endl;
+		//cout <<right << endl;
+		bignum result;
+		result = bignum(left) - bignum(right);
+		result.float_part = result.integer_part.substr(left_int_num.length(), result.integer_part.length());
+		result.integer_part = result.integer_part.substr(0, left_int_num.length());
+		result.negtive = (bignum(left) - bignum(right)).negtive;
 		return result;
 	}
-	string left_string = numbers;
-	string right_string = rhs.numbers;
+	string left_string = integer_part;
+	string right_string = rhs.integer_part;
 	string result = "";
-	if (numbers.length() > right_string.length()) {
-		right_string.insert(0, numbers.length() - right_string.length(), '0');
+	if (integer_part.length() > right_string.length()) {
+		right_string.insert(0, integer_part.length() - right_string.length(), '0');
 	}
 	else {
-		left_string.insert(0, right_string.length() - numbers.length(), '0');
+		left_string.insert(0, right_string.length() - integer_part.length(), '0');
 	}
 	int length = left_string.length();
 	int carry = 0;
@@ -257,9 +338,6 @@ const bignum bignum::operator-(const bignum& rhs) {
 			left = arr[i];
 	}
 	result = "";
-	if (left < 0) {
-		result.insert(0, "-");
-	}
 	for (int i = 0; i < length; i++) {
 		if (left < 0) {
 			arr[i] *= -1;
@@ -281,42 +359,39 @@ const bignum bignum::operator-(const bignum& rhs) {
 	for (size_t i = 0; i < length; i++) {
 		result += to_string(arr[i]);
 	}
+	if (left < 0) {
+		result.insert(0, "-");
+	}
 	return bignum(result);
 
 }
 const bignum bignum::operator*(const bignum& rhs) {
 	if (isFloating() || rhs.isFloating()) {
-		//int part padding
-		string left_int_num = numbers.substr(0, floating_position);
-		string right_int_num = rhs.numbers.substr(0, rhs.floating_position);
-		if (left_int_num.length() > right_int_num.length()) {
-			right_int_num.insert(0, left_int_num.length() - right_int_num.length(), '0');
-		}
-		else {
-			left_int_num.insert(0, right_int_num.length() - left_int_num.length(), '0');
-		}
-
-		//float part padding
-		string left_floating_num = numbers.substr(floating_position, numbers.length());
-		string right_floating_num = rhs.numbers.substr(rhs.floating_position, rhs.numbers.length());
-		int result_floating_position = left_floating_num.length() + right_floating_num.length();
+		string left_int_num = integer_part;
+		string right_int_num = rhs.integer_part;
+		string left_floating_num = float_part;
+		string right_floating_num = rhs.float_part;
+		//decimal place
+		int result_floating_part_length = left_floating_num.length() + right_floating_num.length();
+		//int + float
 		string left = left_int_num + left_floating_num;
 		string right = right_int_num + right_floating_num;
 
 		bignum result = bignum(left) * bignum(right);
-		result.floating_position = result.numbers.length() - result_floating_position;
+		result.float_part = result.integer_part.substr(result.integer_part.length() - result_floating_part_length, result.integer_part.length());
+		result.integer_part = result.integer_part.substr(0, result.integer_part.length() - result_floating_part_length);
 		return result;
 	}
 	string str = "";
-	str.insert(0, rhs.numbers.length() + numbers.length(), '0');
+	str.insert(0, rhs.integer_part.length() + integer_part.length(), '0');
 	bignum result(str);
 	string line = "";
 	int temp;
 	int carry = 0;
 	string padding = "";
-	for (int i = rhs.numbers.length() - 1; i >= 0; i--) {
-		for (int j = numbers.length() - 1; j >= 0; j--) {
-			temp = (numbers[j] - '0') * (rhs.numbers[i] - '0') + carry;
+	for (int i = rhs.integer_part.length() - 1; i >= 0; i--) {
+		for (int j = integer_part.length() - 1; j >= 0; j--) {
+			temp = (integer_part[j] - '0') * (rhs.integer_part[i] - '0') + carry;
 			carry = temp / 10;
 			temp %= 10;
 			line.insert(0, to_string(temp));
@@ -329,201 +404,106 @@ const bignum bignum::operator*(const bignum& rhs) {
 		carry = 0;
 		padding += "0";
 	}
-	//strip redundant  0
+	result.negtive = negtive ^ rhs.negtive;
+
 	return result;
 }
-const bignum bignum::operator/(const bignum& rhs)
-{
-    string left_string = numbers;
-    string right_string = rhs.numbers;
+const bignum bignum::operator/(const bignum& rhs) {
+	if (rhs == bignum("0"))
+	{
+		cout << "divide 0\n";
+		return bignum("0");
+	}
+		
+	if (isFloating() || rhs.isFloating()) {
+		bignum left(integer_part + float_part);
+		bignum right(rhs.integer_part + rhs.float_part);
+		string padding = "";
+		if (float_part > rhs.float_part)
+		{
+			padding.insert(0, float_part.length() - rhs.float_part.length(), '0');
+			right.integer_part += padding;
+		}
+		else
+		{
+			padding.insert(0, rhs.float_part.length() - float_part.length(), '0');
+			left.integer_part += padding;
+		}
+		left.Stripzero();
+		right.Stripzero();
+		return  left / right;
+	}
+	string quotient = "";
+	string left = integer_part;
+	string right = rhs.integer_part;
+	bignum fraction;
+	int count = 0;
+	int length = left.length();
+	int floating_position = left.length();
+	string padding = "";
+	if (left.length() < 30)
+	{
+		padding.insert(0, 30 - left.length(), '0');
+		left += padding;
+	}
+		
+	for (int i = 0; i < left.length() ; i++) {
+		fraction = bignum(left.substr(0, i+1));
+		//cout << "frac :"<<fraction << endl;
+		//cout << "remaing" << left << endl;
 
-    if (isFloating() || rhs.isFloating())
-    {
-        int offset;
-        if (left_string.length() - floating_position > right_string.length() - rhs.floating_position)
-        {
-            offset = (left_string.length() - floating_position - right_string.length() + rhs.floating_position);
-        }
-        else
-        {
-            offset = (right_string.length() - rhs.floating_position - left_string.length() + floating_position);
-        }
-        bignum left = (bignum(pow(10, offset)) * bignum(left_string));
-        bignum right = (bignum(pow(10, offset)) * bignum(right_string));
-        //return  left / right;
-    }
-    string quotient = "";
-    bignum fraction;
-    int count = 0;
-    int length = 0;
-    int floating_position = left_string.length();
-    if (left_string.length() > right_string.length())
-        length = left_string.length();
-    else
-    {
-        length = right_string.length();
-    }
-    string padding = "";
-    padding.insert(0, DIVISION_DECIMAL_PLACE, '0');
-    left_string += padding;
-    for (int i = 1, j = 1; i < length + DIVISION_DECIMAL_PLACE; i++,j++)
-    {
-        fraction = bignum(left_string.substr(0, j));
-        //cout << "frac :"<<fraction << endl;
-        if (fraction >= bignum(right_string))
-        {
-            while (fraction >= bignum(right_string))
-            {
-                fraction = fraction - bignum(right_string);
-                count++;
-                    //cout << "faaaaaaarac :" << fraction << endl;
-            }
-            if (fraction.isNegtive())
-            {
-                count--;
-                fraction = fraction + bignum(right_string);
-            }
-            //cout << "frac :" << fraction << endl;
-            //cout << "count:" <<count << endl;
-            left_string = fraction.numbers + left_string.substr(j, left_string.length());
-            //cout << "remaing" << left_string << endl;
-            quotient += to_string(count);
-            j = 1;
-        }
-        else
-        {
-            quotient += "0";
-        }
-        
-        count = 0;
-    }
+		if (fraction >= bignum(right)) {
+			while (fraction >= bignum(right)) {
+				fraction = fraction - bignum(right);
+				count++;
+			//	cout << "faaaaaaarac :" << fraction << endl;
+			}
+			if (fraction.isNegtive()) {
+				count--;
+				fraction = fraction + bignum(right);
+			}
+			//cout << "frac :" << fraction << endl;
+			//cout << "count:" <<count << endl;
+			left = fraction.integer_part + left.substr(i + 1, left.length());
+			//cout << "remaing" << left << endl;
+			quotient += to_string(count);
+		}
+		else {
+			quotient += "0";
+		}
 
-	return bignum(quotient, floating_position);
+		count = 0;
+	}
+	quotient = quotient.substr(0, length) + "." + quotient.substr(length, quotient.length());
+	bignum result(quotient);
+	result.negtive = negtive ^ rhs.negtive;
+	return result;
 }
 bignum bignum::operator=(const bignum& rhs) {
-	numbers = rhs.numbers;
-	floating_position = rhs.floating_position;
+	integer_part = rhs.integer_part;
+	float_part = rhs.float_part;
+	negtive = rhs.negtive;
 	return *this;
 }
 ostream& operator<<(ostream& str, bignum rhs) {
+	rhs.Stripzero();
 	if (rhs.isFloating()) {
 		if (rhs.isNegtive())
-			str << (rhs.numbers.substr(0, rhs.floating_position + 1) + "." + rhs.numbers.substr(rhs.floating_position + 1, rhs.numbers.length()));
+			str << "-" << rhs.integer_part << "." << rhs.float_part;
 		else
-			str << (rhs.numbers.substr(0, rhs.floating_position) + "." + rhs.numbers.substr(rhs.floating_position, rhs.numbers.length()));
+			str << rhs.integer_part << "." << rhs.float_part;
 	}
 	else
-		str << rhs.numbers;
+		if (rhs.isNegtive())
+			str << "-" << rhs.integer_part ;
+		else
+			str << rhs.integer_part;
 	return str;
 }
 istream& operator>>(istream& str, bignum& rhs) {
 	string tmp;
 	str >> tmp;
 	rhs = bignum(tmp);
+	rhs.Stripzero();
 	return str;
-}
-
-bignum::bignum(const bignum& rhs)
-{
-    if (rhs.isFloating())
-    {
-        floating_position = rhs.floating_position;
-        int i = 0;
-        for (i = rhs.numbers.length(); i >= floating_position; i++)
-        {
-            if (rhs.numbers[i] != '0')
-                break;
-        }
-        numbers = rhs.numbers.substr(0, i);
-    }
-    else
-    {
-        floating_position = rhs.floating_position;
-        int i = 0;
-        for (i = 0; i < rhs.numbers.length(); i++)
-        {
-            if (rhs.numbers[i] != '0')
-                break;
-        }
-        numbers = rhs.numbers.substr(i, rhs.numbers.length());
-    }
-    
-
-}
-bignum::bignum(int num)
-{
-    numbers = "";
-    do
-    {
-        numbers.insert(0, to_string(num % 10));
-        num /= 10;
-    } while (num != 0);
-}
-bignum::bignum() :numbers(""), floating_position(0) {}
-bignum::bignum(string input)
-{
-    if (input == "")
-    {
-        numbers = "0";
-        floating_position = input.length();
-    }
-   
-
-    if (input.find(".") != string::npos)
-    {
-        input = input.substr(0, input.find(".")) + input.substr(input.find(".") + 1, input.length());
-        int floating_point = input.find(".");
-            int i = input.length() - 1;
-        for (; i > floating_point + 1; i--)
-        {
-            if (input[i] != '0')
-                break;
-        }
-        input = input.substr(0, i + 1);
-        i = 0;
-        for (; i < floating_point - 1; i++)
-        {
-            if (input[i] != '0')
-                break;
-        }
-        input = input.substr(i, input.length());
-        numbers = input;
-        floating_position = floating_point - i;
-    }
-    else
-    {
-        int i = 0;
-        for (; i < input.length(); i++)
-        {
-            if (input[i] != '0')
-                break;
-        }
-        numbers = input.substr(i, input.length());
-        floating_position = numbers.length();
-    }
-    
-}
-bignum::bignum(string input, int floating_point)
-{
-    if (input == "")
-    {
-        numbers = "0";
-        floating_position = input.length();
-    }
-    int i = input.length() - 1;
-    for (; i > floating_point + 1; i--)
-    {
-        if (input[i] != '0')
-            break;
-    }
-    input = input.substr(0, i + 1);
-    i = 0;
-    for (; i < floating_point - 1; i++)
-    {
-        if (input[i] != '0')
-            break;
-    }
-    input = input.substr(i, input.length());
-    numbers = input;
-    floating_position = floating_point - i;
 }

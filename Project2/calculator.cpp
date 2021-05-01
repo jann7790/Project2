@@ -33,15 +33,33 @@ calculator::oper::oper(int op):op(op)
 		precedence = 5;
 		associativity = 'L';
 		break;
+	case FACTORIAL:
+		precedence = 2;
+		associativity = 'R';
+		break;
+	case POWER:
+		precedence = 3;
+		associativity = 'R';
+		break;
 	default:
 		break;
 	}
 }
 
 
-calculator::opValue::opValue(oper op, int val) :op(op), val(val) {}
+calculator::opValue::opValue(oper op, bignum val) :op(op), val(val) {}
 
-int calculator::compute(int l, oper op, int r)
+bignum fact(bignum l)
+{
+	bignum s = 1;
+	for (bignum i(1); i < l || i == l; i = i + 1)
+	{
+		s = s * i;
+	}
+	return s;
+}
+
+bignum calculator::compute(bignum l, oper op, bignum r)
 {
 	switch (op.op)
 	{
@@ -57,8 +75,14 @@ int calculator::compute(int l, oper op, int r)
 	case DIVISION:
 		return l / r;
 		break;
+	case FACTORIAL:
+		return !l;
+		break;
+	case POWER:
+		return l ^ r;
+		break;
 	default:
-		return 0;
+		return bignum(0);
 		break;
 	}
 }
@@ -86,6 +110,14 @@ calculator::oper calculator::GetOp()
 		index++;
 		return oper(DIVISION);
 		break;
+	case '!':
+		index++;
+		return oper(FACTORIAL);
+		break;
+	case '^':
+		index++;
+		return oper(POWER);
+		break;
 	default:
 		index++;
 		return oper(-1);
@@ -94,21 +126,21 @@ calculator::oper calculator::GetOp()
 
 }
 
-int calculator::getValue()
+bignum calculator::getValue()
 {
 	string num = "";
 	for (; index < to_be_cal.length(); index++)
 	{
-		if (isdigit(to_be_cal[index]))
+		if (isdigit(to_be_cal[index]) || to_be_cal[index] == '.')
 			num += to_be_cal[index];
 		else if (to_be_cal[index] == '(')
 		{
-			int result;
+			bignum result;
 			index++;
 			result = fuction();
 			if (to_be_cal[index-1] != ')')
 				cout << "aaaaaaaaaaaa";
-			num = to_string(result);
+			return result;
 			break;
 		}
 		else
@@ -117,18 +149,18 @@ int calculator::getValue()
 		}
 	}
 	if (num == "")return 0;
-	return stoi(num);
+	return bignum(num);
 }
 
-int calculator::fuction()
+bignum calculator::fuction()
 {
 	//3 + 5 + 3
-	int value = getValue();
+	bignum value = getValue();
 	stack.push(opValue(oper(-1), 0));
 	while (!stack.empty())
 	{
 		oper onthestack = GetOp();
-		while (stack.top().op.precedence < onthestack.precedence || stack.top().op.precedence == onthestack.precedence)
+		while (stack.top().op.precedence < onthestack.precedence || (stack.top().op.precedence == onthestack.precedence && onthestack.associativity == 'L'))
 		{
 			if (stack.top().op.op == -1)
 			{
@@ -145,4 +177,15 @@ int calculator::fuction()
 
 }
 
+void calculator::Removewhite()
+{
+	for (size_t i = 0; i < to_be_cal.length(); i++)
+	{
+		if (to_be_cal[i] == ' ')
+		{
+			to_be_cal = to_be_cal.substr(0, i) + to_be_cal.substr(i + 1, to_be_cal.length());
+
+		}
+	}
+}
 

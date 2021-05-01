@@ -2,15 +2,18 @@
 #include <iostream>
 #include <stack>
 #include <string>
+#include "bignum.h"
 using namespace std;
 enum MyEnum
 {
 	ADDITION,
 	SUBSTRACTION,
 	MULTIPLICATION,
-	DIVISION
+	DIVISION,
+	FACTORIAL,
+	POWER
 };
-class calculator
+class calculator : public bignum
 {
 public:
 	calculator();
@@ -25,18 +28,19 @@ public:
 	struct opValue
 	{
 		oper op;
-		int val;
-		opValue(oper op, int val);
+		bignum val;
+		opValue(oper op, bignum val);
 	};
 
-	int compute(int l, oper op, int r);
+	bignum compute(bignum l, oper op, bignum r);
 
 	oper GetOp();
 
-	int getValue();
+	bignum getValue();
 
-	int fuction();
+	bignum fuction();
 
+	void Removewhite();
 	string to_be_cal;
 	int index;
 	stack<opValue> stack;
