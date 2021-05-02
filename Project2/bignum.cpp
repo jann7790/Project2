@@ -118,18 +118,22 @@ bignum::bignum(double input_int)
 	if (input.find(".") != string::npos) {
 		integer_part = input.substr(0, input.find("."));
 		float_part = input.substr(input.find(".") + 1, input.length());
+		floating = true;
 	}
 	else {
 		integer_part = input;
 		float_part = "0";
+		floating = false;
 	}
 }
 bignum::bignum(const bignum& rhs) {
 	integer_part = rhs.integer_part;
 	float_part = rhs.float_part;
 	negtive = rhs.negtive;
+	floating = rhs.floating;
+
 }
-bignum::bignum() :integer_part("0"), float_part("0"), negtive(false) {
+bignum::bignum() :integer_part("0"), float_part("0"), negtive(false), floating(false) {
 }
 bignum::bignum(string input) {
 	negtive = 0;
@@ -137,6 +141,7 @@ bignum::bignum(string input) {
 		integer_part = "0";
 		float_part = "0";
 		negtive = 0;
+		floating = false;
 	}
 	if (input.find("-") != string::npos)
 	{
@@ -146,16 +151,22 @@ bignum::bignum(string input) {
 	if (input.find(".") != string::npos) {
 		integer_part = input.substr(0, input.find("."));
 		float_part = input.substr(input.find(".") + 1, input.length());
+		floating = true;
 	}
 	else {
 		integer_part = input;
 		float_part = "0";
+		floating = false;
 	}
 }
 bignum::bignum(string input, string input_floating, bool neg) {
 	integer_part = input;
 	float_part = input_floating;
 	negtive = neg;
+	if(input_floating != 0)
+		floating = true;
+	else
+		floating = false;
 }
 bool bignum::isNegtive()const {
 	return negtive;
@@ -163,7 +174,7 @@ bool bignum::isNegtive()const {
 bool bignum::isFloating()const {
 	for (size_t i = 0; i < float_part.length(); i++)
 	{
-		if (float_part[i] != '0')
+		if (float_part[i] != '0'||floating == true)
 			return 1;
 	}
 	return 0;
@@ -382,8 +393,7 @@ const bignum bignum::operator*(const bignum& rhs) {
 const bignum bignum::operator/(const bignum& rhs) {
 	if (rhs == bignum("0"))
 	{
-		cout << "divide 0\n";
-		return bignum("0");
+		return bignum("error");
 	}
 
 	if (isFloating() || rhs.isFloating()) {
@@ -402,6 +412,9 @@ const bignum bignum::operator/(const bignum& rhs) {
 		}
 		left.Stripzero();
 		right.Stripzero();
+		string padding = "";
+		padding.insert(0, MAX - left.integer_part.length(), '0');
+		left.integer_part += padding;
 		return  left / right;
 	}
 	string quotient = "";
@@ -409,12 +422,9 @@ const bignum bignum::operator/(const bignum& rhs) {
 	string right = rhs.integer_part;
 	bignum fraction;
 	int count = 0;
-	int length = left.length();
-	int floating_position = left.length();
-	string padding = "";
-	padding.insert(0, MAX - left.length(), '0');
-	left += padding;
-
+	
+	
+	
 	for (int i = 0, j = 0; i < left.length(); i++, j++) {
 		fraction = bignum(left.substr(0, i + 1));
 		//cout << "frac :"<<fraction << endl;
@@ -529,4 +539,4 @@ istream& operator>>(istream& str, bignum& rhs) {
 	rhs = bignum(tmp);
 	rhs.Stripzero();
 	return str;
-}	
+}

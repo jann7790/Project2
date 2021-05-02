@@ -35,4 +35,5 @@ public:
 	string integer_part;
 	string float_part;
 	bool negtive;
+	bool floating;
 };

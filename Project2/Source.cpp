@@ -40,5 +40,4 @@ int main()
 	}
 	////cout << ccc.to_be_cal;
 	//cout << ccc.fuction();
-
 }
