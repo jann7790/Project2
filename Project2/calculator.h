@@ -1,7 +1,7 @@
 #pragma once
 #pragma once
 #include <iostream>
-#include <stack>
+#include <vector>
 #include <string>
 #include "bignum.h"
 using namespace std;
@@ -37,7 +37,7 @@ public:
 
 	oper GetOp();
 
-	bignum getValue();
+	bignum getValue(bignum&);
 
 	bignum fuction();
 
@@ -54,5 +54,6 @@ public:
 	string to_be_cal;
 	string output;
 	int index;
-	stack<opValue> _stack;
+	vector<opValue> vec;
+	bool floating;
 };

@@ -163,7 +163,7 @@ bignum::bignum(string input, string input_floating, bool neg) {
 	integer_part = input;
 	float_part = input_floating;
 	negtive = neg;
-	if(input_floating != 0)
+	if(input_floating != '0')
 		floating = true;
 	else
 		floating = false;
@@ -174,7 +174,7 @@ bool bignum::isNegtive()const {
 bool bignum::isFloating()const {
 	for (size_t i = 0; i < float_part.length(); i++)
 	{
-		if (float_part[i] != '0'||floating == true)
+		if (float_part[i] != '0')
 			return 1;
 	}
 	return 0;
@@ -388,6 +388,7 @@ const bignum bignum::operator*(const bignum& rhs) {
 		padding += "0";
 	}
 	result.negtive = negtive ^ rhs.negtive;
+	result.Stripzero();
 	return result;
 }
 const bignum bignum::operator/(const bignum& rhs) {
@@ -412,9 +413,8 @@ const bignum bignum::operator/(const bignum& rhs) {
 		}
 		left.Stripzero();
 		right.Stripzero();
-		string padding = "";
-		padding.insert(0, MAX - left.integer_part.length(), '0');
-		left.integer_part += padding;
+		left.floating = true;
+		right.floating = true;
 		return  left / right;
 	}
 	string quotient = "";
@@ -422,7 +422,13 @@ const bignum bignum::operator/(const bignum& rhs) {
 	string right = rhs.integer_part;
 	bignum fraction;
 	int count = 0;
-	
+	int length = left.length();
+	if (floating || rhs.floating)
+	{
+		string padding = "";
+		padding.insert(0, MAX, '0');
+		left += padding;
+	}
 	
 	
 	for (int i = 0, j = 0; i < left.length(); i++, j++) {
@@ -463,17 +469,17 @@ const bignum bignum::operator!(void)
 	if (isFloating())
 	{
 		cout << "no\n";
-		return bignum("0");
+		return bignum("error");
 	}
 	if (isNegtive())
 	{
 		cout << "no\n";
-		return bignum("0");
+		return bignum("error");
 	}
 	bignum result(1);
 	for (int i = 1; i < *this || i == *this; i++)
 	{
-		cout << i << endl;
+		//cout << i << endl;
 		result = result * i;
 	}
 	return result;
@@ -514,10 +520,10 @@ bignum bignum::operator=(const bignum& rhs) {
 	integer_part = rhs.integer_part;
 	float_part = rhs.float_part;
 	negtive = rhs.negtive;
+	floating = rhs.floating;
 	return *this;
 }
 ostream& operator<<(ostream& str, bignum rhs) {
-	rhs.Stripzero();
 	if (rhs == bignum(0))
 		str << 0;
 	else if (rhs.isFloating()) {

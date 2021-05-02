@@ -164,53 +164,25 @@ bignum calculator::fuction()
 	//3 + 5 + 3
 
 	bignum value;
-	getValue(value);
 	vec.push_back(opValue(oper(-1), 0));
 	while (!vec.empty())
 	{
-		
-		int skip = 0;
 		oper onthestack = GetOp();
+		getValue(value);
 		while (vec.back().op.precedence < onthestack.precedence || (vec.back().op.precedence == onthestack.precedence && onthestack.associativity == 'L'))
 		{
-			if (vec.back().op.op == DIVISION && (vec.back().op.precedence == onthestack.precedence))
-			{
-				vector<opValue>::iterator it = vec.end();
-				int l = 0;
-				do 
-				{
-					vec.push_back(opValue(onthestack, value));
-					getValue(value);
-					oper onthestack = GetOp();
-					l++;
-				} while (vec.back().op.precedence == onthestack.precedence);
-				for (int i = 0;i < l;i++)
-				{
-					for (int j = i;j < l - 2;i++)
-					{
-						//1+  1/  2*  3*  4
-						//     @  !@  !
-						//1+  1*  3/  2*  4
-						//         @  !@  !
-						//1+  1*  3*  4/  2
-						if ((*(it + j)).op.op == DIVISION)
-						{
-
-						}
-					}
-				}
-			}
 			if (vec.back().op.op == -1)
 			{
 				vec.pop_back();
 				result = value;
 				return value;
 			}
-			value = compute(vec.back().val, vec.back().op, value);
+			value = compute(value, vec.back().op, vec.back().val);
 			vec.pop_back();
 		}
-		vec.push_back(opValue(onthestack, value));
-		getValue(value);
+		bignum aaa;
+		vec.push_back(opValue(onthestack, getValue(aaa)));
+		
 		if (value.integer_part == "NULL")
 		{
 			value = compute(vec.back().val, vec.back().op, value);
