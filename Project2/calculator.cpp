@@ -5,11 +5,11 @@
 #include "calculator.h"
 using namespace std;
 
-calculator::calculator() :to_be_cal("0"), index(0) {}
+calculator::calculator() :to_be_cal("0"), index(0), output(""), result(0), _stack(stack<opValue>()) {}
 
-calculator::oper::oper():op(-1), precedence(9999), associativity('L'){}
+calculator::oper::oper() : op(-1), precedence(9999), associativity('L') {}
 
-calculator::oper::oper(int op):op(op)
+calculator::oper::oper(int op) : op(op)
 {
 	switch (op)
 	{
@@ -80,7 +80,7 @@ bignum calculator::compute(bignum l, oper op, bignum r)
 
 calculator::oper calculator::GetOp()
 {
-	if(index >= to_be_cal.length())
+	if (index >= to_be_cal.length())
 		return oper(-1);
 
 	switch (to_be_cal[index])
@@ -114,7 +114,6 @@ calculator::oper calculator::GetOp()
 		return oper(-1);
 		break;
 	}
-
 }
 
 string calculator::getnum()
@@ -132,29 +131,29 @@ string calculator::getnum()
 bignum calculator::getValue()
 {
 	bignum result(0);
-	if(index < to_be_cal.length())
-	switch (to_be_cal[index])
-	{
-	case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':case '0':
-		result = bignum(getnum());
-		break;
-	case '(':
-		index++;
-		result = fuction();
+	if (index < to_be_cal.length())
+		switch (to_be_cal[index])
+		{
+		case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':case '0':
+			result = bignum(getnum());
+			break;
+		case '(':
 			index++;
-		break;
-	case '-':
-		index++;
-		result = bignum(-1) * getValue();
-		break;
-	case '+':
-		index++;
-		result = getValue();
-		break;
-	default:
-		index++;
-		break;
-	}
+			result = fuction();
+			index++;
+			break;
+		case '-':
+			index++;
+			result = bignum(-1) * getValue();
+			break;
+		case '+':
+			index++;
+			result = getValue();
+			break;
+		default:
+			index++;
+			break;
+		}
 	return result;
 }
 
@@ -163,25 +162,25 @@ bignum calculator::fuction()
 	//3 + 5 + 3
 
 	bignum value = getValue();
-	stack.push(opValue(oper(-1), 0));
-	while (!stack.empty())
+	_stack.push(opValue(oper(-1), 0));
+	while (!_stack.empty())
 	{
 		oper onthestack = GetOp();
-		while (stack.top().op.precedence < onthestack.precedence || (stack.top().op.precedence == onthestack.precedence && onthestack.associativity == 'L'))
+		while (_stack.top().op.precedence < onthestack.precedence || (_stack.top().op.precedence == onthestack.precedence && onthestack.associativity == 'L'))
 		{
-			if (stack.top().op.op == -1)
+			if (_stack.top().op.op == -1)
 			{
-				stack.pop();
+				_stack.pop();
+				result = value;
 				return value;
 			}
-			value = compute(stack.top().val, stack.top().op, value);
-			stack.pop();
+			value = compute(_stack.top().val, _stack.top().op, value);
+			_stack.pop();
 		}
-		stack.push(opValue(onthestack, value));
+		_stack.push(opValue(onthestack, value));
 		value = getValue();
 	}
-	stack.push(opValue(oper(-1), 0));
-
+	_stack.push(opValue(oper(-1), 0));
 }
 
 void calculator::Removewhite()
@@ -191,7 +190,6 @@ void calculator::Removewhite()
 		if (to_be_cal[i] == ' ')
 		{
 			to_be_cal = to_be_cal.substr(0, i) + to_be_cal.substr(i + 1, to_be_cal.length());
-
 		}
 	}
 }
@@ -200,4 +198,34 @@ void calculator::input()
 {
 	getline(cin, to_be_cal);
 	index = 0;
+}
+
+void calculator::button(char input)
+{
+	to_be_cal += input;
+}
+void calculator::parse()
+{
+	string out = "";
+	result.Stripzero();
+	if (result == bignum(0))
+		out += "0";
+	else if (result.isFloating()) {
+		if (result.isNegtive())
+			out = out + "-" + result.integer_part + "." + result.float_part;
+		else
+			out = out + result.integer_part + "." + result.float_part;
+	}
+	else
+		if (isNegtive())
+			out = out + "-" + result.integer_part;
+		else
+			out = out + result.integer_part;
+	output = out;
+}
+void calculator::reset()
+{
+	index = 0;
+	to_be_cal = "";
+	result = 0;
 }

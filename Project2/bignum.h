@@ -36,4 +36,3 @@ public:
 	string float_part;
 	bool negtive;
 };
-

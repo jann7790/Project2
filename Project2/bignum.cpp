@@ -14,7 +14,6 @@ void bignum::Stripzero()
 	}
 	integer_part = integer_part.substr(i, integer_part.length());
 
-
 	for (i = float_part.length() - 1; i >= 1; i--)
 	{
 		if (float_part[i] != '0')
@@ -124,7 +123,6 @@ bignum::bignum(double input_int)
 		integer_part = input;
 		float_part = "0";
 	}
-
 }
 bignum::bignum(const bignum& rhs) {
 	integer_part = rhs.integer_part;
@@ -153,7 +151,6 @@ bignum::bignum(string input) {
 		integer_part = input;
 		float_part = "0";
 	}
-
 }
 bignum::bignum(string input, string input_floating, bool neg) {
 	integer_part = input;
@@ -208,7 +205,6 @@ const bignum bignum::operator+(const bignum& rhs) {
 		string left = left_int_num + left_floating_num;
 		string right = right_int_num + right_floating_num;
 
-
 		bignum result = bignum(bignum(left) + bignum(right));
 		//cout << result << endl;
 		if (isNegtive() && rhs.isNegtive())
@@ -216,7 +212,6 @@ const bignum bignum::operator+(const bignum& rhs) {
 		result.float_part = result.integer_part.substr(result.integer_part.length() - left_floating_num.length(), result.integer_part.length());
 		result.integer_part = result.integer_part.substr(0, result.integer_part.length() - left_floating_num.length());
 		return result;
-
 	}
 	//integer
 	string left_string = integer_part;
@@ -240,7 +235,7 @@ const bignum bignum::operator+(const bignum& rhs) {
 	if (carry)
 		result.insert(0, 1, carry + '0');
 	bignum res(result);
-	if(isNegtive() && rhs.isNegtive())
+	if (isNegtive() && rhs.isNegtive())
 		res.negtive = negtive;
 
 	return res;
@@ -331,7 +326,6 @@ const bignum bignum::operator-(const bignum& rhs) {
 				arr[--j]--;
 			}
 		}
-
 	}
 	for (size_t i = 0; i < length; i++) {
 		result += to_string(arr[i]);
@@ -340,7 +334,6 @@ const bignum bignum::operator-(const bignum& rhs) {
 		result.insert(0, "-");
 	}
 	return bignum(result);
-
 }
 const bignum bignum::operator*(const bignum& rhs) {
 	if (isFloating() || rhs.isFloating()) {
@@ -366,7 +359,6 @@ const bignum bignum::operator*(const bignum& rhs) {
 	int temp;
 	int carry = 0;
 	string padding = "";
-
 
 	bool b = new bool[rhs.integer_part.length()];
 	for (int i = rhs.integer_part.length() - 1; i >= 0; i--) {
@@ -420,7 +412,7 @@ const bignum bignum::operator/(const bignum& rhs) {
 	int length = left.length();
 	int floating_position = left.length();
 	string padding = "";
-	padding.insert(0, MAX-left.length(), '0');
+	padding.insert(0, MAX - left.length(), '0');
 	left += padding;
 
 	for (int i = 0, j = 0; i < left.length(); i++, j++) {
@@ -537,4 +529,4 @@ istream& operator>>(istream& str, bignum& rhs) {
 	rhs = bignum(tmp);
 	rhs.Stripzero();
 	return str;
-}
+}	
