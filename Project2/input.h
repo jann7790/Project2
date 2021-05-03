@@ -86,10 +86,10 @@ bool check(string s) {
 		return 1;
 	return 0;
 }
-void input() {
+void input(calculator& cal) {
 	bool error = 0;
-	string input_string;
-	getline(cin, input_string);
+	string input_string = cal.to_be_cal;
+	//getline(cin, input_string);
 	error = check(input_string);
 	if (!error) {
 		if (input_string[0] == 'S' && input_string[1] == 'e' && input_string[2] == 't') {
@@ -124,7 +124,6 @@ void input() {
 				current = next + 3;
 				next = input_string.size();
 				input_string = input_string.substr(current, next - current);
-				calculator cal;
 				trans_var(input_string);
 				cal.to_be_cal = input_string;
 				cal.fuction();
@@ -134,22 +133,21 @@ void input() {
 
 			}
 			else {
-				cout << "Set variable error\n";
+				cal.output = "Set variable error";
 			}
 		}
 		else {
-			calculator cal;
 			trans_var(input_string);
 			cal.to_be_cal = input_string;
 			cal.Removewhite();
 			cal.fuction();
 			cal.parse();
-			cout << cal.output << endl;
+			//cout << cal.output << endl;
 		}
 	}
 	else
 	{
-		cout << "input error\n";
+		cal.output = "input error";
 	}
 }
 
