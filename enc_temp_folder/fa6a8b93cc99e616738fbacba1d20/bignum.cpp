@@ -552,23 +552,3 @@ istream& operator>>(istream& str, bignum& rhs) {
 	rhs.Stripzero();
 	return str;
 }
-string bignum::to_sss()
-{
-	string res = "";
-	if (*this == bignum(0))
-		res =  "0";
-	else if (isFloating()) {
-		if (isNegtive())
-			res = res +  "-" + integer_part + "." + float_part;
-		else
-			res = res + integer_part + "." + float_part;
-	}
-	else
-		if (isNegtive())
-			res = res + "-" + integer_part;
-		else
-			res = integer_part;
-	return res;
-
-}
-

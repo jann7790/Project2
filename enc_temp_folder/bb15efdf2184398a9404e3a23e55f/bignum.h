@@ -32,10 +32,8 @@ public:
 	friend const bool operator<(bignum, bignum);
 	friend const bool operator==(bignum, bignum);
 	friend const bool operator!=(bignum, bignum);
-	string to_sss();
 	string integer_part;
 	string float_part;
 	bool negtive;
 	bool floating;
-	
 };
