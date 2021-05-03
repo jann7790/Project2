@@ -502,7 +502,6 @@ const bignum bignum::operator^(const bignum& rhs)
 			approx = bignum(approx + *this / approx) / 2;
 		}
 		result = result * approx;
-		cout << "float length: " << result.float_part.length() << endl;
 		if (result.float_part.length() > 100) {
 			result.float_part = result.float_part.substr(0, 100);
 		}
@@ -513,7 +512,6 @@ const bignum bignum::operator^(const bignum& rhs)
 	for (size_t i = 0; i < rhs; i++) {
 		result = result * *this;
 	}
-	cout << "float length: " << result.float_part.length() << endl;
 	if (result.float_part.length() > 100) {
 		result.float_part = result.float_part.substr(0, 100);
 	}
