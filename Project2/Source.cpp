@@ -12,11 +12,8 @@ int main()
 	bignum num3;
 	bignum num4;
 	//cout << "input a, b:";
-	//cin >> num1;
-	//cin >> num2;
 
 	//cout << (bignum(2) ^ bignum(-2)) << endl;
-	//cout << (num1 ^ num2) << endl;
 
 	//cout << "num1 >= num2 = " << (num1 >= num2) << endl;
 	//cout << "num1 > num2 = " << (num1 > num2) << endl;
