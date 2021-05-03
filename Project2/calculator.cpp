@@ -110,6 +110,10 @@ calculator::oper calculator::GetOp()
 		index++;
 		return oper(POWER);
 		break;
+	case ')':
+		index++;
+		return oper(-1);
+		break;
 	default:
 		index++;
 		return oper(-1);
@@ -192,7 +196,7 @@ bignum calculator::fuction()
 					tmp.push_back(opValue(onthestack, getValue(value)));
 					onthestack = GetOp();
 				} while (vec.back().op.precedence == onthestack.precedence);
-				if (!tmp.empty())
+				if (tmp.size() >= 2)
 					vec.pop_back();
 				for (int i = 0;i < tmp.size();i++)
 				{
@@ -216,7 +220,7 @@ bignum calculator::fuction()
 				result = start;
 				return start;
 			}
-			if(vec.size() == 2)
+			if((vec.end() - 2)->op.op == -1)
 				start = compute(start, vec.back().op, vec.back().val);
 			else
 			{
@@ -228,7 +232,7 @@ bignum calculator::fuction()
 		getValue(value);
 		if (value.integer_part == "NULL")
 		{
-			if (vec.size() == 2)
+			if ((vec.end() - 2)->op.op == -1)
 				start = compute(start, vec.back().op, vec.back().val);
 			else
 			{
