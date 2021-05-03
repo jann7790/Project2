@@ -33,10 +33,7 @@ int main()
 	//cout << "input calculation:";
 	while (1)
 	{
-		ccc.input();
-		ccc.fuction();
-		ccc.parse();
-		cout << ccc.output << endl;
+		input();
 	}
 	////cout << ccc.to_be_cal;
 	//cout << ccc.fuction();

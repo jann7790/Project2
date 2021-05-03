@@ -232,13 +232,19 @@ bignum calculator::fuction()
 		getValue(value);
 		if (value.integer_part == "NULL")
 		{
-			if ((vec.end() - 2)->op.op == -1)
+			if (vec.size() == 1)
+				start = compute(start, onthestack, 0);
+			else if ((vec.end() - 2)->op.op == -1)
+			{
 				start = compute(start, vec.back().op, vec.back().val);
+				vec.pop_back();
+
+			}
 			else
 			{
 				(vec.end() - 2)->val = compute((vec.end() - 2)->val, vec.back().op, vec.back().val);
+				vec.pop_back();
 			}
-			vec.pop_back();
 		}
 		else
 		{
@@ -256,6 +262,7 @@ void calculator::Removewhite()
 		if (to_be_cal[i] == ' ')
 		{
 			to_be_cal = to_be_cal.substr(0, i) + to_be_cal.substr(i + 1, to_be_cal.length());
+			i--;
 		}
 	}
 }

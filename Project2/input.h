@@ -141,6 +141,7 @@ void input() {
 			calculator cal;
 			trans_var(input_string);
 			cal.to_be_cal = input_string;
+			cal.Removewhite();
 			cal.fuction();
 			cal.parse();
 			cout << cal.output << endl;
