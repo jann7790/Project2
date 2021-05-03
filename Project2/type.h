@@ -61,7 +61,7 @@ public:
 		integer_part = cal.result.integer_part;
 		negtive = cal.result.negtive;
 		float_part = cal.result.float_part;
-		floating = cal.result.floating;
+		floating = true;
 		return *this;
 
 	}

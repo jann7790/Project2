@@ -11,7 +11,11 @@ int main()
 	//cout << "input a, b:";
 	//cin >> num1;
 	//cin >> num2;
-
+	Integer a ;
+	a = "50.5";
+	Decimal b;
+	b = "60";
+	cout << (a/b);
 	//cout << (bignum(2) ^ bignum(-2)) << endl;
 	//cout << (num1 ^ num2) << endl;
 
@@ -30,7 +34,7 @@ int main()
 	//cout << "input calculation:";
 	while (1)
 	{
-		input();
+		input(ccc);
 	}
 	////cout << ccc.to_be_cal;
 	//cout << ccc.fuction();
