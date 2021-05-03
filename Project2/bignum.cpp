@@ -487,12 +487,7 @@ const bignum bignum::operator!(void)
 const bignum bignum::operator^(const bignum& rhs)
 {
 	if (rhs.isNegtive()) {
-		// according to TA's reply, ^ should return 0 if power < 0
-			//bignum result(1);
-			//for (int i = 0; i > rhs; i--) {
-			//	result = result * *this;
-			//}
-			//return bignum(1) / result;
+		// return 0 if exponent < 0
 		return bignum(0);
 	}
 
@@ -508,15 +503,19 @@ const bignum bignum::operator^(const bignum& rhs)
 		}
 		result = result * approx;
 		cout << "float length: " << result.float_part.length() << endl;
-		if (result.float_part.length() > 5) {
-			result.float_part = result.float_part.substr(0, 5);
+		if (result.float_part.length() > 100) {
+			result.float_part = result.float_part.substr(0, 100);
 		}
 		return  result;
 	}
-
+	// positive integer exponent
 	bignum result(1);
 	for (size_t i = 0; i < rhs; i++) {
 		result = result * *this;
+	}
+	cout << "float length: " << result.float_part.length() << endl;
+	if (result.float_part.length() > 100) {
+		result.float_part = result.float_part.substr(0, 100);
 	}
 	return result;
 }
