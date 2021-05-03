@@ -506,7 +506,12 @@ const bignum bignum::operator^(const bignum& rhs)
 		while ((approx - *this / approx) > error) {
 			approx = bignum(approx + *this / approx) / 2;
 		}
-		return  result * approx;
+		result = result * approx;
+		cout << "float length: " << result.float_part.length() << endl;
+		if (result.float_part.length() > 5) {
+			result.float_part = result.float_part.substr(0, 5);
+		}
+		return  result;
 	}
 
 	bignum result(1);
