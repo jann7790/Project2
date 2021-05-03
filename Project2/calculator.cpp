@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <assert.h>
 #include <string>
 #include "calculator.h"
 using namespace std;
@@ -159,62 +160,85 @@ bignum calculator::getValue(bignum& value)
 	return value;
 }
 
+template<typename T>
+void pop_front(std::vector<T>& vec)
+{
+	assert(!vec.empty());
+	vec.erase(vec.begin());
+}
 bignum calculator::fuction()
 {
 	//3 + 5 + 3
 
 	bignum value;
-	getValue(value);
+	bignum start;
+	getValue(start);
 	vec.push_back(opValue(oper(-1), 0));
+	vector <opValue> tmp;
+
 	while (!vec.empty())
 	{
 		
-		int skip = 0;
 		oper onthestack = GetOp();
-		while (vec.back().op.precedence < onthestack.precedence || (vec.back().op.precedence == onthestack.precedence && onthestack.associativity == 'L'))
+		int sorted = 0;
+		while (vec.back().op.precedence < onthestack.precedence || (vec.back().op.precedence == onthestack.precedence && onthestack.associativity == 'L') || !tmp.empty())
 		{
-			if (vec.back().op.op == DIVISION && (vec.back().op.precedence == onthestack.precedence))
+			if (vec.back().op.op == DIVISION && (vec.back().op.precedence == onthestack.precedence) && !sorted)
 			{
-				vector<opValue>::iterator it = vec.end();
-				int l = 0;
+				sorted = 1;
+				tmp.push_back(vec.back());
 				do 
 				{
-					vec.push_back(opValue(onthestack, value));
-					getValue(value);
-					oper onthestack = GetOp();
-					l++;
+					tmp.push_back(opValue(onthestack, getValue(value)));
+					onthestack = GetOp();
 				} while (vec.back().op.precedence == onthestack.precedence);
-				for (int i = 0;i < l;i++)
+				if (!tmp.empty())
+					vec.pop_back();
+				for (int i = 0;i < tmp.size();i++)
 				{
-					for (int j = i;j < l - 2;i++)
+					for (int j = i;j < tmp.size() - 1;j++)
 					{
-						//1+  1/  2*  3*  4
-						//     @  !@  !
-						//1+  1*  3/  2*  4
-						//         @  !@  !
-						//1+  1*  3*  4/  2
-						if ((*(it + j)).op.op == DIVISION)
+						if (tmp[j].op.op == DIVISION)
 						{
-
+							swap(tmp[j], tmp[j+1]);
 						}
 					}
 				}
 			}
+			if (!tmp.empty())
+			{
+				vec.push_back(tmp.front());
+				pop_front(tmp);
+			}
 			if (vec.back().op.op == -1)
 			{
 				vec.pop_back();
-				result = value;
-				return value;
+				result = start;
+				return start;
 			}
-			value = compute(vec.back().val, vec.back().op, value);
+			if(vec.size() == 2)
+				start = compute(start, vec.back().op, vec.back().val);
+			else
+			{
+				(vec.end() - 2)->val = compute((vec.end() - 2)->val, vec.back().op, vec.back().val);
+			}
 			vec.pop_back();
 		}
-		vec.push_back(opValue(onthestack, value));
+		
 		getValue(value);
 		if (value.integer_part == "NULL")
 		{
-			value = compute(vec.back().val, vec.back().op, value);
+			if (vec.size() == 2)
+				start = compute(start, vec.back().op, vec.back().val);
+			else
+			{
+				(vec.end() - 2)->val = compute((vec.end() - 2)->val, vec.back().op, vec.back().val);
+			}
 			vec.pop_back();
+		}
+		else
+		{
+			vec.push_back(opValue(onthestack, value));
 		}
 
 	}
@@ -247,19 +271,13 @@ void calculator::parse()
 {
 	string out = "";
 	result.Stripzero();
-	if (result == bignum(0))
-		out += "0";
-	else if (result.isFloating()) {
-		if (result.isNegtive())
-			out = out + "-" + result.integer_part + "." + result.float_part;
-		else
+	if (result.isNegtive() && result != bignum(0))
+		out += "-";
+	if (result.isFloating()) {
 			out = out + result.integer_part + "." + result.float_part;
 	}
 	else
-		if (isNegtive())
-			out = out + "-" + result.integer_part;
-		else
-			out = out + result.integer_part;
+		out = out + result.integer_part;
 	output = out;
 }
 void calculator::reset()
