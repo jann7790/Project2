@@ -544,6 +544,10 @@ ostream& operator<<(ostream& str, bignum rhs) {
 istream& operator>>(istream& str, bignum& rhs) {
 	string tmp;
 	str >> tmp;
+	if (!rhs.floating && tmp.find(".") != string::npos)
+	{
+		tmp = tmp.substr(0, tmp.find("."));
+	}
 	rhs = bignum(tmp);
 	rhs.Stripzero();
 	return str;

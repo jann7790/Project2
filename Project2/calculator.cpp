@@ -6,7 +6,7 @@
 #include "calculator.h"
 using namespace std;
 
-calculator::calculator() :to_be_cal("0"), index(0), output(""), result(0), vec(vector<opValue>()) {}
+calculator::calculator() :to_be_cal(""), index(0), output(""), result(0), vec(vector<opValue>()) {}
 
 calculator::oper::oper() : op(-1), precedence(9999), associativity('L') {}
 
@@ -205,6 +205,28 @@ bignum calculator::fuction()
 						if (tmp[j].op.op == DIVISION)
 						{
 							swap(tmp[j], tmp[j+1]);
+						}
+					}
+				}
+			}
+			if (vec.back().op.op == POWER && (vec.back().op.precedence == onthestack.precedence) && !sorted)
+			{
+				sorted = 1;
+				tmp.push_back(vec.back());
+				do
+				{
+					tmp.push_back(opValue(onthestack, getValue(value)));
+					onthestack = GetOp();
+				} while (vec.back().op.precedence == onthestack.precedence);
+				if (tmp.size() >= 2)
+					vec.pop_back();
+				for (int i = 0; i < tmp.size(); i++)
+				{
+					for (int j = i; j < tmp.size() - 1; j++)
+					{
+						if (tmp[j].op.op == DIVISION)
+						{
+							swap(tmp[j], tmp[j + 1]);
 						}
 					}
 				}

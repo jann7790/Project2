@@ -1,5 +1,6 @@
 #include "calculator.h"
 #include "input.h"
+#include "type.h"
 #include <string>
 #include <iostream>
 
@@ -7,10 +8,6 @@ using namespace variable;
 using namespace std;
 int main()
 {
-	bignum num1;
-	bignum num2;
-	bignum num3;
-	bignum num4;
 	//cout << "input a, b:";
 	//cin >> num1;
 	//cin >> num2;
